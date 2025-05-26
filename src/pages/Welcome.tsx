@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../css/welcome.css';
-import logo from '../fto/logomakepri.png';
+import logo from '../fto/makepri.png';
 
 const Welcome: React.FC = () => {
   return (
