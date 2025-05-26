@@ -1,0 +1,63 @@
+.dashboard {
+  padding: 16px;
+  background-color: #f2f2f2;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard-header {
+  background-color: #fff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.aset-saya {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.hidden-balance {
+  color: #222;
+}
+
+.grafik {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.grafik-card {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.pie-chart {
+  height: 150px;
+  background-color: #eaeaea;
+  border-radius: 8px;
+  margin-top: 8px;
+}
+
+.transaksi-summary {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.pemasukan {
+  color: green;
+}
+
+.pengeluaran {
+  color: red;
+}

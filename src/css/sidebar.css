@@ -1,0 +1,21 @@
+
+
+/* Tombol Menu (Sidebar Toggle) */
+.menu-button {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: #006BA1;
+    color: #ffffff;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+    font-size: 16px;
+    border: none;
+}
+
+/* Hover efek untuk tombol */
+.menu-button:hover {
+    background-color: #004F87;
+}

@@ -1,0 +1,67 @@
+/* Gaya utama halaman transaksi */
+.transaksi-container {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.year-month-selector select {
+  margin: 0 5px;
+  padding: 5px;
+}
+
+/* Toggle Pendapatan/Pengeluaran */
+.income-expense-toggle {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.income-expense-toggle button {
+  padding: 10px 20px;
+  margin: 0 5px;
+  border: none;
+  cursor: pointer;
+  background-color: #00ffc8;
+}
+
+.income-expense-toggle .active {
+  background-color: #007bff;
+  color: rgb(68, 0, 255);
+}
+
+/* Daftar transaksi */
+.transaction-list {
+  background-color: #00ffc8;
+  padding: 20px;
+  border-radius: 5px;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #0080ff;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+/* Tombol tambah transaksi */
+ion-fab {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+ion-fab-button {
+  background-color: #007bff;
+  color: rgb(255, 18, 18);
+}
