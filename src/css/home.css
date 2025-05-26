@@ -1,14 +1,14 @@
 .dashboard {
-  padding: 16px;
-  background-color: #f2f2f2;
+  padding: 5px;
+  background-color: #a6ff00;
   font-family: Arial, sans-serif;
 }
 
 .dashboard-header {
-  background-color: #fff;
+  background-color: #ffffff;
   padding: 16px;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgb(0, 0, 0);
   margin-bottom: 16px;
   text-align: center;
 }
@@ -60,4 +60,11 @@
 
 .pengeluaran {
   color: red;
+}
+
+.home-image {
+  width: 50px; /* Atur lebar sesuai kebutuhan */
+  height: auto; /* Agar tinggi menyesuaikan proporsi asli */
+  display: block; /* Menghindari efek inline */
+  right: 100 auto; /* Memposisikan di tengah */
 }

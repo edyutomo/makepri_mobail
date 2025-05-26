@@ -4,6 +4,7 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, IonTab
 import { homeOutline, walletOutline, personOutline, listOutline } from 'ionicons/icons';
 import Dompet from './Dompet';
 import '../css/home.css';
+import logo from '../fto/makepri.png';
 
 const Home: React.FC = () => {
   const history = useHistory();
@@ -12,14 +13,17 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Home</IonTitle>
+          <IonTitle><img src={logo} alt="Logo" className="home-image" /></IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
+            <IonTitle>
+              
+            </IonTitle>
+
           </IonToolbar>
         </IonHeader>
 
@@ -48,7 +52,6 @@ const Home: React.FC = () => {
             <div className="pengeluaran">- 50.000.00</div>
           </section>
 
-          <Dompet />
         </div>
       </IonContent>
 

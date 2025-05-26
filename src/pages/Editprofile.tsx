@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import '../css/editprofile.css';
+import logo from '../fto/makepri.png';
 
 interface EditProfileProps {
   onCancel: () => void;
@@ -19,12 +20,8 @@ const EditProfile: React.FC<EditProfileProps> = ({ onCancel, onSave }) => {
 
   return (
     <div className="edit-profile-box">
-      <h2>Edit</h2>
-      <img
-        src="https://via.placeholder.com/100"
-        alt="Profile"
-        className="profile-img"
-      />
+      <h2>Edit Profile</h2>
+      <img src={logo} alt="Logo Profil" className="profile-img" />
       <form onSubmit={handleSubmit}>
         <input
           type="text"

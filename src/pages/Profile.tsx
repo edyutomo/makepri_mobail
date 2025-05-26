@@ -4,6 +4,7 @@ import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter, IonTab
 import { homeOutline, walletOutline, personOutline, listOutline } from 'ionicons/icons';
 import '../css/profile.css';
 import EditProfile from './Editprofile';
+import logo from '../fto/makepri.png';
 
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -14,7 +15,9 @@ const Profile: React.FC = () => {
     // Simpan perubahan profile di sini
     setIsEditing(false);
   };
+
   const history = useHistory();
+
   return (
     <IonPage>
       <IonHeader>
@@ -30,11 +33,7 @@ const Profile: React.FC = () => {
           ) : (
             <div className="profile-box">
               <h2>PROFIL</h2>
-              <img
-                src="https://via.placeholder.com/100"
-                alt="Profile"
-                className="profile-img"
-              />
+              <img src={logo} alt="Logo Profil" className="profile-img" />
               <h3>Administrator</h3>
               <p>Email: admin1@gmail.com</p>
               <p>Password: *********</p>
@@ -46,30 +45,30 @@ const Profile: React.FC = () => {
         </div>
       </IonContent>
 
- {/* Menu Navigasi */}
-       <IonFooter>
-         <IonTabBar>
-           <IonTabButton tab="home" onClick={() => history.push('/home')}>
-             <IonIcon icon={homeOutline} />
-             <IonLabel>Home</IonLabel>
-           </IonTabButton>
- 
-           <IonTabButton tab="transaksi" onClick={() => history.push('/transaksi')}>
-             <IonIcon icon={listOutline} />
-             <IonLabel>Transaksi</IonLabel>
-           </IonTabButton>
- 
-           <IonTabButton tab="dompet" onClick={() => history.push('/dompet')}>
-             <IonIcon icon={walletOutline} />
-             <IonLabel>Dompet</IonLabel>
-           </IonTabButton>
- 
-           <IonTabButton tab="profile" onClick={() => history.push('/profile')}>
-             <IonIcon icon={personOutline} />
-             <IonLabel>Profil</IonLabel>
-           </IonTabButton>
-         </IonTabBar>
-       </IonFooter>
+      {/* Menu Navigasi */}
+      <IonFooter>
+        <IonTabBar>
+          <IonTabButton tab="home" onClick={() => history.push('/home')}>
+            <IonIcon icon={homeOutline} />
+            <IonLabel>Home</IonLabel>
+          </IonTabButton>
+
+          <IonTabButton tab="transaksi" onClick={() => history.push('/transaksi')}>
+            <IonIcon icon={listOutline} />
+            <IonLabel>Transaksi</IonLabel>
+          </IonTabButton>
+
+          <IonTabButton tab="dompet" onClick={() => history.push('/dompet')}>
+            <IonIcon icon={walletOutline} />
+            <IonLabel>Dompet</IonLabel>
+          </IonTabButton>
+
+          <IonTabButton tab="profile" onClick={() => history.push('/profile')}>
+            <IonIcon icon={personOutline} />
+            <IonLabel>Profil</IonLabel>
+          </IonTabButton>
+        </IonTabBar>
+      </IonFooter>
     </IonPage>
   );
 };

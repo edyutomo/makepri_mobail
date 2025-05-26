@@ -17,11 +17,11 @@ const Login: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonItem>
+        <IonItem className="input-container">
           <IonLabel position="floating">Email</IonLabel>
           <IonInput type="email" />
         </IonItem>
-        <IonItem>
+        <IonItem className="input-container">
           <IonLabel position="floating">Password</IonLabel>
           <IonInput type="password" />
         </IonItem>
