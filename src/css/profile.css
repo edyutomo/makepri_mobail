@@ -140,3 +140,16 @@ IonTabButton IonIcon {
 IonTabButton IonLabel {
   font-size: 14px;
 }
+
+.logout-btn {
+  background-color: crimson;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.logout-btn:hover {
+  background-color: darkred;
+}

@@ -8,6 +8,7 @@ import logo from '../fto/makepri.png';
 
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const history = useHistory();
 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
@@ -16,7 +17,10 @@ const Profile: React.FC = () => {
     setIsEditing(false);
   };
 
-  const history = useHistory();
+  const handleLogout = () => {
+    localStorage.removeItem('token'); // Hapus token
+    history.push('/login'); // Arahkan ke login
+  };
 
   return (
     <IonPage>
@@ -39,6 +43,11 @@ const Profile: React.FC = () => {
               <p>Password: *********</p>
               <button className="edit-btn" onClick={handleEdit}>
                 Edit Profil
+              </button>
+
+              {/* Tombol Logout */}
+              <button className="logout-btn" onClick={handleLogout} style={{ marginTop: '1rem', backgroundColor: 'crimson', color: 'white', padding: '10px 20px', borderRadius: '8px', border: 'none' }}>
+                Logout
               </button>
             </div>
           )}

@@ -7,10 +7,10 @@ import Welcome from './pages/Welcome';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Dompet from './pages/Dompet'
-import Transaksi from './pages/Transaksi'
-import Profile from './pages/Profile'
-import Editprofile from './pages/Editprofile'
+import Dompet from './pages/Dompet';
+import Transaksi from './pages/Transaksi';
+import Profile from './pages/Profile';
+import Editprofile from './pages/Editprofile';
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -26,17 +26,25 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 import './theme/variables.css';
 
-import { App as CapacitorApp } from '@capacitor/app'; // gunakan ini untuk exitApp
+import { App as CapacitorApp } from '@capacitor/app'; // untuk exitApp
 
 setupIonicReact();
 
 const App = () => {
   useEffect(() => {
-    document.addEventListener('ionBackButton', () => {
+    const handler = (event) => {
       event.detail.register(10, () => {
-        CapacitorApp.exitApp(); // exit app dengan benar
+        if (window.confirm('Yakin mau keluar?')) {
+          CapacitorApp.exitApp();
+        }
       });
-    });
+    };
+
+    document.addEventListener('ionBackButton', handler);
+
+    return () => {
+      document.removeEventListener('ionBackButton', handler);
+    };
   }, []);
 
   return (

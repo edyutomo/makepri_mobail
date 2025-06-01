@@ -1,15 +1,37 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 import '../css/register.css';
 
 const Register: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Registering with', name, email, password);
-    // Tambahkan logika penyimpanan data pengguna
+    try {
+      const response = await axios.post('https://apitugas3.xyz/api/register', {
+        name,
+        email,
+        password
+      });
+
+      if (response.data.success) {
+        alert('Pendaftaran berhasil!');
+        history.push('/login');
+      } else {
+        alert('Pendaftaran gagal: ' + response.data.message);
+      }
+    } catch (error: any) {
+      console.error(error);
+      if (error.response && error.response.data && error.response.data.message) {
+        alert('Gagal: ' + error.response.data.message);
+      } else {
+        alert('Terjadi kesalahan saat mendaftar.');
+      }
+    }
   };
 
   return (
