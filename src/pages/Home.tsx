@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonFooter, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/react';
-import { homeOutline, walletOutline, personOutline, listOutline } from 'ionicons/icons';
+import { homeOutline, walletOutline, personOutline, listOutline, eye,
+  eyeOff, } from 'ionicons/icons';
 import Dompet from './Dompet';
 import '../css/home.css';
 import logo from '../fto/makepri.png';
 
+
 const Home: React.FC = () => {
   const history = useHistory();
+  const [showBalance, setShowBalance] = useState(false);
+  const totalAset = 10000000; // kamu bisa ganti dari state atau props
 
   return (
     <IonPage>
@@ -28,12 +32,19 @@ const Home: React.FC = () => {
         </IonHeader>
 
         <div className="dashboard">
+          <p className="viewnama">Halo Edy Utami, jangan lupa hura-hura hari ini.</p>
           <header className="dashboard-header">
-            <p>Halo Edy Utami, jangan lupa hura-hura hari ini.</p>
             <div className="aset-saya">
-              <span>Aset Saya</span>
-              <span className="hidden-balance">Rp*******</span>
-            </div>
+            <span>Aset Saya: </span>
+            <span className="balance-display">
+              {showBalance ? `Rp${totalAset.toLocaleString('id-ID')}` : 'Rp*******'}
+            </span>
+            <IonIcon
+              icon={showBalance ? eyeOff : eye}
+              onClick={() => setShowBalance(!showBalance)}
+              className="eye-icon"
+            />
+          </div>
           </header>
 
           <section className="grafik">

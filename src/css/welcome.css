@@ -9,6 +9,10 @@
   padding: 16px;
 }
 
+.welcome-image{
+  margin-bottom: 10%;
+}
+
 .welcome-box {
   background: #0081D1;
   padding: 40px;
@@ -59,7 +63,7 @@
 }
 
 .btn.register:hover {
-  background-color: #5112a8;
+  background-color: #1a5fd0;
 }
 
 

@@ -61,6 +61,9 @@ const Register: React.FC = () => {
             required
           />
           <button type="submit">Daftar</button>
+          
+          <button className="back-button" type="button" onClick={() => history.push('/login')}>Kembali</button>
+
         </form>
       </div>
     </div>

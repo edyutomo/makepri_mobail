@@ -1,13 +1,18 @@
 .dashboard {
   padding: 5px;
-  background-color: #a6ff00;
+  background-color: #2868b1;
   font-family: Arial, sans-serif;
+}
+
+.viewnama {
+  color: #fff;
+  text-align: center;
 }
 
 .dashboard-header {
   background-color: #ffffff;
-  padding: 16px;
-  border-radius: 12px;
+  padding: 10px;
+  border-radius: 8px;
   box-shadow: 0 2px 6px rgb(0, 0, 0);
   margin-bottom: 16px;
   text-align: center;
@@ -15,13 +20,27 @@
 
 .aset-saya {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
   margin-top: 8px;
   font-weight: bold;
 }
 
-.hidden-balance {
+.balance-display {
+  font-family: monospace;
   color: #222;
+}
+
+.eye-icon {
+  font-size: 20px;
+  cursor: pointer;
+  color: #222;
+  transition: transform 0.2s ease;
+}
+
+.eye-icon:hover {
+  transform: scale(1.2);
 }
 
 .grafik {
@@ -63,8 +82,8 @@
 }
 
 .home-image {
-  width: 50px; /* Atur lebar sesuai kebutuhan */
-  height: auto; /* Agar tinggi menyesuaikan proporsi asli */
-  display: block; /* Menghindari efek inline */
-  right: 100 auto; /* Memposisikan di tengah */
+  width: 50px;
+  height: auto;
+  display: block;
+  margin: 100 auto;
 }
