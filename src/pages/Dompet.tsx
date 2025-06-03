@@ -34,22 +34,40 @@ const Dompet: React.FC = () => {
 
 useEffect(() => {
   const fetchDompet = async () => {
-    try {
-      const token = localStorage.getItem('token') || 
-        'eyJpdiI6InRjbjhMU2g5Z2lVeWQwRnI2cGR4Vmc9PSIsInZhbHVlIjoiQU9oUTh1bWJSMzRpSUZJSlU4aS8weEZEanFCM1R6...'; // TOKEN YANG KAMU KASIH
+    const token = localStorage.getItem('token');
 
-      const response = await axios.get('https://apitugas3.xyz/api/dompet', {
+    if (!token) {
+      alert('Token tidak ditemukan. Silakan login ulang.');
+      history.push('/login');
+      return;
+    }
+
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/dompet', {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: 'application/json',
         },
-        withCredentials: true, // optional kalau pakai Sanctum cookie
       });
 
+      console.log('Respons API:', response.data); // ✅ debug
       setDompetList(response.data.data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Gagal mengambil data dompet:', error);
-      alert('Gagal mengambil data dompet');
+
+      if (error.response) {
+        console.error('Error Response:', error.response);
+        console.error('Status:', error.response.status);
+        console.error('Data:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+      } else {
+        console.error('Error Message:', error.message);
+      }
+
+      alert('Gagal mengambil data dompet. Silakan login ulang.');
+      localStorage.removeItem('token');
+      history.push('/login');
     } finally {
       setLoading(false);
     }
