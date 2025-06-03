@@ -1,25 +1,47 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/react';
+import {
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter,
+  IonTabBar, IonTabButton, IonIcon, IonLabel
+} from '@ionic/react';
 import { homeOutline, walletOutline, personOutline, listOutline } from 'ionicons/icons';
 import '../css/profile.css';
 import EditProfile from './Editprofile';
 import logo from '../fto/makepri.png';
+import axios from 'axios';
 
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const history = useHistory();
+
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    // Ambil data user dari API
+    axios.get('https://apitugas3.xyz/api/user', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        setUser(res.data.user);
+      })
+      .catch((err) => {
+        console.error('Gagal mengambil data user:', err);
+        history.push('/login'); // Kalau error, redirect login
+      });
+  }, []);
 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
-  const handleSave = () => {
-    // Simpan perubahan profile di sini
+
+  const handleSave = (updatedUser: any) => {
+    setUser(updatedUser);
     setIsEditing(false);
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token'); // Hapus token
-    history.push('/login'); // Arahkan ke login
+    localStorage.removeItem('token');
+    history.push('/login');
   };
 
   return (
@@ -33,20 +55,18 @@ const Profile: React.FC = () => {
       <IonContent fullscreen>
         <div className="profile-container">
           {isEditing ? (
-            <EditProfile onSave={handleSave} onCancel={handleCancel} />
+            <EditProfile user={user} onSave={handleSave} onCancel={handleCancel} />
           ) : (
             <div className="profile-box">
               <h2>PROFIL</h2>
-              <img src={logo} alt="Logo Profil" className="profile-img" />
-              <h3>Administrator</h3>
-              <p>Email: admin1@gmail.com</p>
+              <img src={user?.foto ?? logo} alt="Logo Profil" className="profile-img" />
+              <h3>{user?.name ?? 'Administrator'}</h3>
+              <p>Email: {user?.email ?? '-'}</p>
               <p>Password: *********</p>
               <button className="edit-btn" onClick={handleEdit}>
                 Edit Profil
               </button>
-
-              {/* Tombol Logout */}
-              <button className="logout-btn" onClick={handleLogout} style={{ marginTop: '1rem', backgroundColor: 'crimson', color: 'white', padding: '10px 20px', borderRadius: '8px', border: 'none' }}>
+              <button className="logout-btn" onClick={handleLogout}>
                 Logout
               </button>
             </div>
@@ -54,24 +74,20 @@ const Profile: React.FC = () => {
         </div>
       </IonContent>
 
-      {/* Menu Navigasi */}
       <IonFooter>
         <IonTabBar>
           <IonTabButton tab="home" onClick={() => history.push('/home')}>
             <IonIcon icon={homeOutline} />
             <IonLabel>Home</IonLabel>
           </IonTabButton>
-
           <IonTabButton tab="transaksi" onClick={() => history.push('/transaksi')}>
             <IonIcon icon={listOutline} />
             <IonLabel>Transaksi</IonLabel>
           </IonTabButton>
-
           <IonTabButton tab="dompet" onClick={() => history.push('/dompet')}>
             <IonIcon icon={walletOutline} />
             <IonLabel>Dompet</IonLabel>
           </IonTabButton>
-
           <IonTabButton tab="profile" onClick={() => history.push('/profile')}>
             <IonIcon icon={personOutline} />
             <IonLabel>Profil</IonLabel>

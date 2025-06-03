@@ -43,31 +43,24 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/dompet', {
+      const response = await axios.get('http://apitugas3.xyz/api/dompet', {
         headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/json',
+          // Ganti header ini sesuai kebutuhan backend
+          'api_token': token,
+          'Accept': 'application/json',
         },
       });
 
-      console.log('Respons API:', response.data); // ✅ debug
+      console.log('Respons API:', response.data);
       setDompetList(response.data.data || []);
     } catch (error: any) {
-      console.error('Gagal mengambil data dompet:', error);
-
-      if (error.response) {
-        console.error('Error Response:', error.response);
-        console.error('Status:', error.response.status);
-        console.error('Data:', error.response.data);
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-      } else {
-        console.error('Error Message:', error.message);
+      console.error('Error fetch dompet:', error);
+      alert('Gagal mengambil data dompet. Silakan coba lagi.');
+      if (error.response && error.response.status === 401) {
+        // Token invalid, logout dan redirect login
+        localStorage.removeItem('token');
+        history.push('/login');
       }
-
-      alert('Gagal mengambil data dompet. Silakan login ulang.');
-      localStorage.removeItem('token');
-      history.push('/login');
     } finally {
       setLoading(false);
     }

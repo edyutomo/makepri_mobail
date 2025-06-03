@@ -1,25 +1,24 @@
 import React, { useState, useRef } from 'react';
 import '../css/editprofile.css';
-import logo from '../fto/makepri.png';
+import axios from 'axios';
 
 interface EditProfileProps {
+  user: any;
   onCancel: () => void;
-  onSave: () => void;
+  onSave: (updatedUser: any) => void;
 }
 
-const EditProfile: React.FC<EditProfileProps> = ({ onCancel, onSave }) => {
-  const [username, setUsername] = useState('Administrator');
+const EditProfile: React.FC<EditProfileProps> = ({ user, onCancel, onSave }) => {
+  const [username, setUsername] = useState(user?.name ?? '');
   const [oldPassword, setOldPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [profilePic, setProfilePic] = useState<string>(logo); // state foto profil, awalnya logo
+  const [profilePic, setProfilePic] = useState<string>(user?.foto ?? '');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Saat gambar diklik, trigger input file click
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
 
-  // Saat file dipilih, baca dan tampilkan preview
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
@@ -34,10 +33,28 @@ const EditProfile: React.FC<EditProfileProps> = ({ onCancel, onSave }) => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Validasi dan simpan data di sini, termasuk foto profil (profilePic)
-    onSave();
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put('https://apitugas3.xyz/api/update-profile', {
+        name: username,
+        old_password: oldPassword,
+        new_password: newPassword,
+        foto: profilePic,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      alert('Profil berhasil diperbarui!');
+      onSave(response.data.user); // Kirim data baru ke parent
+    } catch (error) {
+      console.error('Gagal update profil:', error);
+      alert('Gagal update profil. Coba lagi.');
+    }
   };
 
   return (
@@ -78,12 +95,8 @@ const EditProfile: React.FC<EditProfileProps> = ({ onCancel, onSave }) => {
           onChange={(e) => setNewPassword(e.target.value)}
         />
         <div className="edit-buttons">
-          <button type="button" className="btn-cancel" onClick={onCancel}>
-            Batal
-          </button>
-          <button type="submit" className="btn-save">
-            Konfirmasi
-          </button>
+          <button type="button" className="btn-cancel" onClick={onCancel}>Batal</button>
+          <button type="submit" className="btn-save">Konfirmasi</button>
         </div>
       </form>
     </div>

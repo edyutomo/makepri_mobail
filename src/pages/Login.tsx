@@ -18,7 +18,8 @@ import '../css/login.css';
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // State ikon mata
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const history = useHistory();
 
   const handleLogin = async () => {
@@ -27,11 +28,14 @@ const Login: React.FC = () => {
       return;
     }
 
+    setLoading(true);
     try {
       const response = await axios.post('https://apitugas3.xyz/api/login', {
         email,
         password,
       });
+
+      console.log('Login response:', response.data);
 
       if (response.data.status) {
         localStorage.setItem('token', response.data.token);
@@ -41,8 +45,13 @@ const Login: React.FC = () => {
         alert('Login gagal: Email atau Password salah.');
       }
     } catch (error: any) {
-      console.error('Error response:', error.response);
-      alert('Terjadi kesalahan saat login. Silakan coba lagi.');
+      if (error.response && error.response.data && error.response.data.message) {
+        alert('Error: ' + error.response.data.message);
+      } else {
+        alert('Terjadi kesalahan saat login. Silakan coba lagi.');
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,21 +70,21 @@ const Login: React.FC = () => {
           <p className="input-label">Email:</p>
           <IonItem className="input-container">
             <IonInput
-              type="email"
-              value={email}
-              onIonChange={(e) => setEmail(e.detail.value!)}
-              placeholder="Masukkan Email"
-            />
+  type="email"
+  value={email}
+  onIonChange={(e) => setEmail(e.detail.value ?? '')}
+  placeholder="Masukkan Email"
+/>
           </IonItem>
 
           <p className="input-label">Password:</p>
           <IonItem className="input-container password-input">
             <IonInput
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onIonChange={(e) => setPassword(e.detail.value!)}
-              placeholder="Masukkan Password"
-            />
+  type={showPassword ? 'text' : 'password'}
+  value={password}
+  onIonChange={(e) => setPassword(e.detail.value ?? '')}
+  placeholder="Masukkan Password"
+/>
             <IonIcon
               slot="end"
               icon={showPassword ? eyeOff : eye}
@@ -84,17 +93,18 @@ const Login: React.FC = () => {
             />
           </IonItem>
 
-          <IonButton expand="block" className="login-button" onClick={handleLogin}>Login</IonButton>
-            <p className="register-link">
-              Belum punya akun?{' '}
-              <span onClick={() => history.push('/register')} className="register-action">
-                Daftar sekarang
-              </span>
-              <br />
-              <a href="/" className="back-to-home-link">Kembali ke tampilan menu awal</a>
-            </p>
+          <IonButton expand="block" className="login-button" onClick={handleLogin} disabled={loading}>
+            {loading ? 'Loading...' : 'Login'}
+          </IonButton>
 
-
+          <p className="register-link">
+            Belum punya akun?{' '}
+            <span onClick={() => history.push('/register')} className="register-action">
+              Daftar sekarang
+            </span>
+            <br />
+            <a href="/" className="back-to-home-link">Kembali ke tampilan menu awal</a>
+          </p>
         </div>
       </IonContent>
     </IonPage>
