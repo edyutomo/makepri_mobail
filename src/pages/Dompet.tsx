@@ -7,6 +7,7 @@ import { homeOutline, walletOutline, personOutline, listOutline } from 'ionicons
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../css/dompet.css';
+import logo from '../fto/makepri.png';
 
 const Dompet: React.FC = () => {
   const [dompetList, setDompetList] = useState<any[]>([]);
@@ -53,7 +54,11 @@ useEffect(() => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Dompet Saya</IonTitle>
+           <div className="toolbar-content">
+          {/* <IonTitle className="toolbar-title">Home</IonTitle> */}
+          <img src={logo} alt="Logo" className="toolbar-logo" />
+        </div>
+          {/* <IonTitle>Dompet Saya</IonTitle> */}
         </IonToolbar>
       </IonHeader>
 

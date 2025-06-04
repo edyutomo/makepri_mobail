@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter, IonTabBar, IonTabButton, IonIcon, IonLabel, IonFab, IonFabButton } from '@ionic/react';
 import { homeOutline, walletOutline, personOutline, listOutline, addOutline } from 'ionicons/icons';
 import '../css/transaksi.css';
+import logo from '../fto/makepri.png';
 
 const Transaksi = () => {
   const [isIncome, setIsIncome] = useState(true);
@@ -24,7 +25,11 @@ const Transaksi = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Transaksi</IonTitle>
+           <div className="toolbar-content">
+          {/* <IonTitle className="toolbar-title">Home</IonTitle> */}
+          <img src={logo} alt="Logo" className="toolbar-logo" />
+        </div>
+          {/* <IonTitle>Dompet Saya</IonTitle> */}
         </IonToolbar>
       </IonHeader>
 
