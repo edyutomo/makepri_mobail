@@ -1,55 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonFooter,
-  IonTabBar,
-  IonTabButton,
-  IonIcon,
-  IonLabel,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonSpinner,
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter,
+  IonTabBar, IonTabButton, IonIcon, IonLabel, IonSpinner
 } from '@ionic/react';
-import {
-  homeOutline,
-  walletOutline,
-  personOutline,
-  listOutline,
-} from 'ionicons/icons';
+import { homeOutline, walletOutline, personOutline, listOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../css/dompet.css';
+import logo from '../fto/makepri.png';
 
 const Dompet: React.FC = () => {
   const [dompetList, setDompetList] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const history = useHistory();
 
+
 useEffect(() => {
   const fetchDompet = async () => {
-    try {
-      const token = localStorage.getItem('token') || 
-        'eyJpdiI6InRjbjhMU2g5Z2lVeWQwRnI2cGR4Vmc9PSIsInZhbHVlIjoiQU9oUTh1bWJSMzRpSUZJSlU4aS8weEZEanFCM1R6...'; // TOKEN YANG KAMU KASIH
+    const token = localStorage.getItem('token');
+    console.log('Token yang dipakai:', token);
 
+    if (!token) {
+      alert('Token tidak ditemukan. Silakan login ulang.');
+      history.push('/login');
+      return;
+    }
+
+    try {
       const response = await axios.get('https://apitugas3.xyz/api/dompet', {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${token}`, // Coba ini dulu
           Accept: 'application/json',
         },
-        withCredentials: true, // optional kalau pakai Sanctum cookie
       });
-
+      console.log('Respons API:', response.data);
       setDompetList(response.data.data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Gagal mengambil data dompet:', error);
-      alert('Gagal mengambil data dompet');
+      alert('Gagal mengambil data dompet. Silakan coba lagi.');
+      if (error.response && error.response.status === 401) {
+        localStorage.removeItem('token');
+        history.push('/login');
+      }
     } finally {
       setLoading(false);
     }
@@ -62,7 +54,11 @@ useEffect(() => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Dompet Saya</IonTitle>
+           <div className="toolbar-content">
+          {/* <IonTitle className="toolbar-title">Home</IonTitle> */}
+          <img src={logo} alt="Logo" className="toolbar-logo" />
+        </div>
+          {/* <IonTitle>Dompet Saya</IonTitle> */}
         </IonToolbar>
       </IonHeader>
 
@@ -89,7 +85,6 @@ useEffect(() => {
         </div>
       </IonContent>
 
-      {/* Menu Navigasi */}
       <IonFooter>
         <IonTabBar>
           <IonTabButton tab="home" onClick={() => history.push('/home')}>
