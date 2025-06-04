@@ -10,6 +10,7 @@ import EditProfile from './Editprofile';
 import logo from '../fto/makepri.png';
 import axios from 'axios';
 
+
 const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -48,7 +49,10 @@ const Profile: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Profil</IonTitle>
+        <div className="toolbar-content">
+          {/* <IonTitle className="toolbar-title">Home</IonTitle> */}
+          <img src={logo} alt="Logo" className="toolbar-logo" />
+        </div>
         </IonToolbar>
       </IonHeader>
 

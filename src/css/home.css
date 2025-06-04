@@ -1,89 +1,232 @@
+/* home.css */
+
+/* --- Styling untuk Header --- */
+/* Styling untuk header */
+.toolbar-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Ukuran logo kecil dan rapi di toolbar */
+.toolbar-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+/* Styling untuk judul di toolbar */
+/* .toolbar-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-right: 50px;
+} */
+
+
+@media (max-width: 768px) {
+  ion-toolbar ion-title .home-image {
+    width: 100px;
+  }
+}
+
+/* ... CSS Anda yang lain ... */
+
+/* Styling untuk seluruh halaman dan background */
+ion-content {
+  --background: #2868b1; /* Background biru untuk IonContent */
+}
+
 .dashboard {
-  padding: 5px;
-  background-color: #2868b1;
+  padding: 15px; /* Tambah padding sedikit agar tidak terlalu mepet */
+  background-color: transparent; /* Ubah ini menjadi transparan karena background sudah diatur di ion-content */
   font-family: Arial, sans-serif;
+  min-height: 100%; /* Pastikan dashboard mengambil tinggi penuh */
+  display: flex; /* Gunakan flexbox untuk layout vertikal */
+  flex-direction: column;
 }
 
 .viewnama {
-  color: #fff;
+  color: #fffafa;
   text-align: center;
+  margin-top: 1px; /* Sedikit jarak dari header */
+  font-size: em;
+  font-weight: 500;
 }
 
 .dashboard-header {
-  background-color: #ffffff;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgb(0, 0, 0);
-  margin-bottom: 16px;
+  background-color: #f5f3f3;
+  padding: 1px; /* Tambah padding */
+  border-radius: 5px; /* Lebih rounded */
+  box-shadow: 0 4px 10px rgba(255, 255, 255, 0.26); /* Shadow lebih menonjol */
+  margin-bottom: 20px; /* Jarak lebih dari grafik */
   text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transisi untuk hover */
+}
+
+.dashboard-header:hover {
+  transform: translateY(-3px); /* Efek naik saat hover */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25); /* Shadow lebih gelap saat hover */
 }
 
 .aset-saya {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 13px; /* Tambah jarak */
   margin-top: 8px;
   font-weight: bold;
+  font-size: 1em;
+  color: #333;
 }
 
 .balance-display {
-  font-family: monospace;
-  color: #222;
+  font-family: 'Segoe UI Mono', 'Courier New', monospace; /* Font monospasi yang lebih modern */
+  color: #007bff; /* Warna biru untuk saldo */
+  font-size: 1.3em;
 }
 
 .eye-icon {
-  font-size: 20px;
+  font-size: 22px; /* Ukuran icon lebih besar */
   cursor: pointer;
-  color: #222;
-  transition: transform 0.2s ease;
+  color: #555555;
+  transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .eye-icon:hover {
   transform: scale(1.2);
+  color: #007bff; /* Warna berubah saat hover */
 }
 
 .grafik {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 16px;
+  justify-content: space-around; /* Agar ada jarak di antara mereka */
+  flex-wrap: wrap; /* Pastikan responsif pada layar kecil */
+  gap: 20px; /* Jarak antar card grafik */
+  margin-bottom: 20px; /* Jarak dari ringkasan transaksi */
 }
 
 .grafik-card {
   flex: 1;
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  min-width: 140px; /* Ukuran minimum agar tidak terlalu kecil */
+  max-width: 48%; /* Untuk dua kolom pada desktop, responsif pada mobile */
+  background-color: #f0f0f0;
+  border-radius: 10px; /* Lebih rounded */
+  padding: 2px; /* Tambah padding */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.pie-chart {
-  height: 150px;
-  background-color: #eaeaea;
-  border-radius: 8px;
-  margin-top: 8px;
+.grafik-card:hover {
+  transform: translateY(-5px); /* Efek naik saat hover */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Shadow lebih gelap saat hover */
 }
+
+.grafik-card h3 {
+  color: #333;
+  margin-bottom: 15px; /* Jarak dari chart */
+  font-size: 1.15em;
+}
+
+/* --- Bagian Grafik Pie Chart --- */
+.pie-chart {
+  width: 150px; /* Ukuran pie chart */
+  height: 150px;
+  border-radius: 50%;
+  margin: 0 auto; /* Tengah di dalam card */
+  /* Contoh conic-gradient untuk 70% Pemasukan (hijau) dan 30% Sisanya (abu-abu) */
+  /* Anda perlu mengganti nilai persentase ini secara dinamis dari React */
+  background: conic-gradient(
+    #28a745 0% 70%, /* Pemasukan (misal 70%) */
+    #6c757d 70% 100% /* Sisa (misal 30%) */
+  );
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1); /* Sedikit bayangan di dalam */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #ffffff;
+  font-size: 0.9em;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Contoh untuk grafik pengeluaran: 60% pengeluaran (merah) dan 40% sisa (abu-abu) */
+/* Anda perlu memberikan class terpisah atau style inline untuk chart kedua jika persentasenya berbeda */
+/* Atau, jika Anda ingin kedua grafik menunjukkan data yang sama dengan warna berbeda, Anda bisa menyesuaikan ini */
+.grafik-card:nth-child(2) .pie-chart {
+   background: conic-gradient(
+    #476fdd 0% 60%, /* Pengeluaran (misal 60%) */
+    #6c757d 60% 100% /* Sisa (misal 40%) */
+  );
+}
+
 
 .transaksi-summary {
+  background-color: #ebebeb;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   justify-content: space-around;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
   font-weight: bold;
+  font-size: 1.1em;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.transaksi-summary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
 .pemasukan {
-  color: green;
+  color: #28a745; /* Hijau cerah */
+  padding: 5px 10px;
+  border-radius: 8px;
+  background-color: #e6ffe6; /* Background sedikit cerah */
 }
 
 .pengeluaran {
-  color: red;
+  color: #357ddc; /* Merah cerah */
+  padding: 5px 10px;
+  border-radius: 8px;
+  background-color: #8ef8ef; /* Background sedikit cerah */
 }
 
 .home-image {
-  width: 50px;
+  width: 120px; /* Ukuran logo di header */
   height: auto;
   display: block;
-  margin: 100 auto;
+  margin: 0 auto; /* Tengahkan logo */
+  padding: 5px 0; /* Jarak atas bawah */
+}
+
+/* Styling untuk footer dan tab bar */
+ion-footer {
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); /* Bayangan di atas footer */
+}
+
+ion-tab-bar {
+  --background: #ffffff; /* Background putih untuk tab bar */
+  border-top: none; /* Hapus border bawaan */
+  padding: 5px 0;
+}
+
+ion-tab-button {
+  --color: #777; /* Warna default icon dan label */
+  --color-selected: #007bff; /* Warna saat terpilih */
+  --ripple-color: rgba(0, 123, 255, 0.2); /* Efek ripple */
+  font-size: 0.8em; /* Ukuran font label */
+  transition: transform 0.2s ease;
+}
+
+ion-tab-button:hover {
+  transform: translateY(-2px); /* Efek naik sedikit saat hover */
+}
+
+ion-tab-button ion-icon {
+  font-size: 24px; /* Ukuran icon */
+  margin-bottom: 2px;
 }
