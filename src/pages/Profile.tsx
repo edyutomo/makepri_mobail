@@ -18,18 +18,27 @@ const Profile: React.FC = () => {
   const token = localStorage.getItem('token');
 
   useEffect(() => {
-    // Ambil data user dari API
+    if (!token) {
+      history.push('/login');
+      return;
+    }
+
     axios.get('https://apitugas3.xyz/api/user', {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
-        setUser(res.data.user);
+        if (res.data.success) {
+          setUser(res.data.data);
+        } else {
+          console.error('Respon gagal:', res.data);
+          history.push('/login');
+        }
       })
       .catch((err) => {
         console.error('Gagal mengambil data user:', err);
-        history.push('/login'); // Kalau error, redirect login
+        history.push('/login');
       });
-  }, []);
+  }, [history, token]);
 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
@@ -59,10 +68,10 @@ const Profile: React.FC = () => {
           ) : (
             <div className="profile-box">
               <h2>PROFIL</h2>
-              <img src={user?.foto ?? logo} alt="Logo Profil" className="profile-img" />
+              <img src={user?.foto_profile ?? logo} alt="Foto Profil" className="profile-img" />
               <h3>{user?.name ?? 'Administrator'}</h3>
               <p>Email: {user?.email ?? '-'}</p>
-              <p>Password: *********</p>
+              <p>Saldo: Rp {parseInt(user?.saldo || 0).toLocaleString()}</p>
               <button className="edit-btn" onClick={handleEdit}>
                 Edit Profil
               </button>

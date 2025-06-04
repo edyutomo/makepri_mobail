@@ -1,28 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonFooter,
-  IonTabBar,
-  IonTabButton,
-  IonIcon,
-  IonLabel,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonSpinner,
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter,
+  IonTabBar, IonTabButton, IonIcon, IonLabel, IonSpinner
 } from '@ionic/react';
-import {
-  homeOutline,
-  walletOutline,
-  personOutline,
-  listOutline,
-} from 'ionicons/icons';
+import { homeOutline, walletOutline, personOutline, listOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import '../css/dompet.css';
@@ -32,9 +13,11 @@ const Dompet: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const history = useHistory();
 
+
 useEffect(() => {
   const fetchDompet = async () => {
     const token = localStorage.getItem('token');
+    console.log('Token yang dipakai:', token);
 
     if (!token) {
       alert('Token tidak ditemukan. Silakan login ulang.');
@@ -43,21 +26,18 @@ useEffect(() => {
     }
 
     try {
-      const response = await axios.get('http://apitugas3.xyz/api/dompet', {
+      const response = await axios.get('https://apitugas3.xyz/api/dompet', {
         headers: {
-          // Ganti header ini sesuai kebutuhan backend
-          'api_token': token,
-          'Accept': 'application/json',
+          Authorization: `Bearer ${token}`, // Coba ini dulu
+          Accept: 'application/json',
         },
       });
-
       console.log('Respons API:', response.data);
       setDompetList(response.data.data || []);
     } catch (error: any) {
-      console.error('Error fetch dompet:', error);
+      console.error('Gagal mengambil data dompet:', error);
       alert('Gagal mengambil data dompet. Silakan coba lagi.');
       if (error.response && error.response.status === 401) {
-        // Token invalid, logout dan redirect login
         localStorage.removeItem('token');
         history.push('/login');
       }
@@ -100,7 +80,6 @@ useEffect(() => {
         </div>
       </IonContent>
 
-      {/* Menu Navigasi */}
       <IonFooter>
         <IonTabBar>
           <IonTabButton tab="home" onClick={() => history.push('/home')}>

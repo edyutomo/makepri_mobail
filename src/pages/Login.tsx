@@ -37,8 +37,10 @@ const Login: React.FC = () => {
 
       console.log('Login response:', response.data);
 
-      if (response.data.status) {
+      if (response.data.status && response.data.token) {
+        // Simpan token dalam localStorage, sesuai yang dibutuhkan oleh Dompet.tsx
         localStorage.setItem('token', response.data.token);
+
         alert('Login berhasil!');
         history.push('/home');
       } else {
@@ -70,21 +72,21 @@ const Login: React.FC = () => {
           <p className="input-label">Email:</p>
           <IonItem className="input-container">
             <IonInput
-  type="email"
-  value={email}
-  onIonChange={(e) => setEmail(e.detail.value ?? '')}
-  placeholder="Masukkan Email"
-/>
+              type="email"
+              value={email}
+              onIonChange={(e) => setEmail(e.detail.value ?? '')}
+              placeholder="Masukkan Email"
+            />
           </IonItem>
 
           <p className="input-label">Password:</p>
           <IonItem className="input-container password-input">
             <IonInput
-  type={showPassword ? 'text' : 'password'}
-  value={password}
-  onIonChange={(e) => setPassword(e.detail.value ?? '')}
-  placeholder="Masukkan Password"
-/>
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onIonChange={(e) => setPassword(e.detail.value ?? '')}
+              placeholder="Masukkan Password"
+            />
             <IonIcon
               slot="end"
               icon={showPassword ? eyeOff : eye}
