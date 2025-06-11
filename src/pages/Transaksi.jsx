@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter, IonTabBar, IonTabButton, IonIcon, IonLabel, IonFab, IonFabButton } from '@ionic/react';
-import { homeOutline, walletOutline, personOutline, listOutline, addOutline } from 'ionicons/icons';
+import {
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter, IonTabBar,
+  IonTabButton, IonIcon, IonLabel, IonFab, IonFabButton
+} from '@ionic/react';
+import {
+  homeOutline, walletOutline, personOutline, listOutline, addOutline
+} from 'ionicons/icons';
+import axios from 'axios';
 import '../css/transaksi.css';
 import logo from '../fto/makepri.png';
 
@@ -9,27 +15,44 @@ const Transaksi = () => {
   const [isIncome, setIsIncome] = useState(true);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [selectedMonth, setSelectedMonth] = useState('Januari');
-  const [transactions, setTransactions] = useState([
-    { date: '20/01/2025', time: '12:30 WIB', category: 'Makanan', description: 'Makan Siang', amount: 'Rp 25.500' }
-  ]);
+  const [transactions, setTransactions] = useState([]);
+
+  const history = useHistory();
 
   const toggleIncomeExpense = () => {
     setIsIncome(!isIncome);
   };
 
-  const addTransaction = () => {
-    console.log('Tambah Transaksi');
+  const navigateToTrspendapatan = () => {
+    history.push('/trspendapatan');
   };
-  const history = useHistory();
+
+  // Ambil data transaksi dari API
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const response = await axios.get("https://apitugas3.xyz/api/transaksi");
+        setTransactions(response.data.data || []);
+      } catch (error) {
+        console.error("Gagal mengambil data transaksi:", error);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  // Filter transaksi berdasarkan jenis
+  const filteredTransactions = transactions.filter(trx =>
+    isIncome ? trx.type === 'pendapatan' : trx.type === 'pengeluaran'
+  );
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-           <div className="toolbar-content">
-          {/* <IonTitle className="toolbar-title">Home</IonTitle> */}
-          <img src={logo} alt="Logo" className="toolbar-logo" />
-        </div>
-          {/* <IonTitle>Dompet Saya</IonTitle> */}
+          <div className="toolbar-content">
+            <img src={logo} alt="Logo" className="toolbar-logo" />
+          </div>
         </IonToolbar>
       </IonHeader>
 
@@ -56,62 +79,58 @@ const Transaksi = () => {
           </header>
 
           <div className="income-expense-toggle">
-            <button onClick={toggleIncomeExpense} className={isIncome ? 'active' : ''}>Pendapatan</button>
-            <button onClick={toggleIncomeExpense} className={!isIncome ? 'active' : ''}>Pengeluaran</button>
+            <button onClick={() => setIsIncome(true)} className={isIncome ? 'active' : ''}>Pendapatan</button>
+            <button onClick={() => setIsIncome(false)} className={!isIncome ? 'active' : ''}>Pengeluaran</button>
           </div>
 
           <div className="transaction-list">
-            {isIncome ? (
-              <div className="income-list">
-                {/* Render pendapatan */}
-              </div>
+            {filteredTransactions.length > 0 ? (
+              filteredTransactions.map((transaction, index) => (
+                <div key={index} className="transaction-item">
+                  <div className="transaction-date">{transaction.date}</div>
+                  <div className="transaction-category">{transaction.category}</div>
+                  <div className="transaction-description">{transaction.description}</div>
+                  <div className="transaction-amount">Rp {transaction.amount}</div>
+                </div>
+              ))
             ) : (
-              <div className="expense-list">
-                {transactions.map((transaction, index) => (
-                  <div key={index} className="transaction-item">
-                    <div className="transaction-date">{transaction.date}</div>
-                    <div className="transaction-time">{transaction.time}</div>
-                    <div className="transaction-category">{transaction.category}</div>
-                    <div className="transaction-description">{transaction.description}</div>
-                    <div className="transaction-amount">{transaction.amount}</div>
-                  </div>
-                ))}
-              </div>
+              <p style={{ textAlign: 'center', marginTop: '2rem' }}>Tidak ada transaksi.</p>
             )}
           </div>
-
-          <IonFab slot="fixed" vertical="bottom" horizontal="end">
-            <IonFabButton onClick={addTransaction}>
-              <IonIcon icon={addOutline} />
-            </IonFabButton>
-          </IonFab>
         </div>
+
+        {/* Tombol Tambah */}
+        <IonFab vertical="bottom" horizontal="end" slot="fixed">
+          <IonFabButton onClick={navigateToTrspendapatan}>
+            <IonIcon icon={addOutline} />
+          </IonFabButton>
+        </IonFab>
       </IonContent>
 
       {/* Menu Navigasi */}
-            <IonFooter>
-              <IonTabBar>
-                <IonTabButton tab="home" onClick={() => history.push('/home')}>
-                  <IonIcon icon={homeOutline} />
-                  <IonLabel>Home</IonLabel>
-                </IonTabButton>
-      
-                <IonTabButton tab="transaksi" onClick={() => history.push('/transaksi')}>
-                  <IonIcon icon={listOutline} />
-                  <IonLabel>Transaksi</IonLabel>
-                </IonTabButton>
-      
-                <IonTabButton tab="dompet" onClick={() => history.push('/dompet')}>
-                  <IonIcon icon={walletOutline} />
-                  <IonLabel>Dompet</IonLabel>
-                </IonTabButton>
-      
-                <IonTabButton tab="profile" onClick={() => history.push('/profile')}>
-                  <IonIcon icon={personOutline} />
-                  <IonLabel>Profil</IonLabel>
-                </IonTabButton>
-              </IonTabBar>
-            </IonFooter>
+      <IonFooter>
+        <IonTabBar>
+          <IonTabButton tab="home" onClick={() => history.push('/home')}>
+            <IonIcon icon={homeOutline} />
+            <IonLabel>Home</IonLabel>
+          </IonTabButton>
+
+          <IonTabButton tab="transaksi" onClick={() => history.push('/transaksi')}>
+            <IonIcon icon={listOutline} />
+            <IonLabel>Transaksi</IonLabel>
+          </IonTabButton>
+
+          <IonTabButton tab="dompet" onClick={() => history.push('/dompet')}>
+            <IonIcon icon={walletOutline} />
+            <IonLabel>Dompet</IonLabel>
+          </IonTabButton>
+
+          <IonTabButton tab="profile" onClick={() => history.push('/profile')}>
+            <IonIcon icon={personOutline} />
+            <IonLabel>Profil</IonLabel>
+          </IonTabButton>
+        </IonTabBar>
+      </IonFooter>
     </IonPage>
   );
 };

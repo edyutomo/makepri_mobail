@@ -11,7 +11,7 @@ import Dompet from './pages/Dompet';
 import Transaksi from './pages/Transaksi';
 import Profile from './pages/Profile';
 import Editprofile from './pages/Editprofile';
-import TrsPendapatan from './pages/trspendaptan';
+import Trspendapatan from './pages/Trspendapatan';
 import TrsPengeluaran from './pages/trspengeluaran';
 
 import '@ionic/react/css/core.css';
@@ -59,7 +59,7 @@ const App = () => {
           <Route exact path="/home" component={Home} />
           <Route exact path="/dompet" component={Dompet} />
           <Route exact path="/transaksi" component={Transaksi} />
-          <Route exact path="/pendapatan" component={TrsPendapatan} />
+          <Route exact path="/trspendapatan" component={Trspendapatan} />
           <Route exact path="/pengeluaran" component={TrsPengeluaran} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/Editprofile" component={Editprofile} />

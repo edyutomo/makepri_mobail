@@ -1,6 +1,6 @@
-import React, { useState, useRef } from 'react';
-import '../css/editprofile.css';
-import axios from 'axios';
+import React, { useState, useRef } from "react";
+import "../css/editprofile.css";
+import axios from "axios";
 
 interface EditProfileProps {
   user: any;
@@ -8,11 +8,16 @@ interface EditProfileProps {
   onSave: (updatedUser: any) => void;
 }
 
-const EditProfile: React.FC<EditProfileProps> = ({ user, onCancel, onSave }) => {
-  const [username, setUsername] = useState(user?.name ?? '');
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [profilePic, setProfilePic] = useState<string>(user?.foto ?? '');
+const EditProfile: React.FC<EditProfileProps> = ({
+  user,
+  onCancel,
+  onSave,
+}) => {
+  const [username, setUsername] = useState(user?.name ?? "");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [profilePic, setProfilePic] = useState<string>(user?.foto ?? "");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageClick = () => {
@@ -22,38 +27,43 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onCancel, onSave }) => 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      const reader = new FileReader();
-
-      reader.onload = (ev) => {
-        if (ev.target?.result) {
-          setProfilePic(ev.target.result as string);
-        }
-      };
-      reader.readAsDataURL(file);
+      setSelectedFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      setProfilePic(previewUrl);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem('token');
-      const response = await axios.put('https://apitugas3.xyz/api/update-profile', {
-        name: username,
-        old_password: oldPassword,
-        new_password: newPassword,
-        foto: profilePic,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("name", username);
+      formData.append("old_password", oldPassword);
+      formData.append("new_password", newPassword);
+      if (selectedFile) {
+        formData.append("foto", selectedFile);
+      }
 
-      alert('Profil berhasil diperbarui!');
-      onSave(response.data.user); // Kirim data baru ke parent
-    } catch (error) {
-      console.error('Gagal update profil:', error);
-      alert('Gagal update profil. Coba lagi.');
+      const response = await axios.put(
+        "https://apitugas3.xyz/api/update-profile",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      alert("Profil berhasil diperbarui!");
+      onSave(response.data.user);
+    } catch (error: any) {
+      console.error("Gagal update profil:", error.response?.data || error);
+      alert(
+        error.response?.data?.message ||
+          "Gagal update profil. Silakan coba lagi."
+      );
     }
   };
 
@@ -65,13 +75,13 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onCancel, onSave }) => 
         alt="Foto Profil"
         className="profile-img"
         onClick={handleImageClick}
-        style={{ cursor: 'pointer' }}
+        style={{ cursor: "pointer" }}
         title="Klik untuk ganti foto profil"
       />
       <input
         type="file"
         ref={fileInputRef}
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
         accept="image/*"
         onChange={handleFileChange}
       />
@@ -95,8 +105,12 @@ const EditProfile: React.FC<EditProfileProps> = ({ user, onCancel, onSave }) => 
           onChange={(e) => setNewPassword(e.target.value)}
         />
         <div className="edit-buttons">
-          <button type="button" className="btn-cancel" onClick={onCancel}>Batal</button>
-          <button type="submit" className="btn-save">Konfirmasi</button>
+          <button type="button" className="btn-cancel" onClick={onCancel}>
+            Batal
+          </button>
+          <button type="submit" className="btn-save">
+            Konfirmasi
+          </button>
         </div>
       </form>
     </div>
