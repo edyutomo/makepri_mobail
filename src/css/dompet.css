@@ -1,24 +1,27 @@
-/* .dompet {
-  padding: 16px;
+.dompet {
+  padding: 40px;
+  --primary-blue: #007bff;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   margin-bottom: 24px;
+  width: 100%;
+  max-width: 450px;
 }
 
 .dompet h3 {
-  margin-bottom: 16px;
+  margin-bottom: 30px;
 }
 
 .dompet-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-bottom: 24px;
+  gap: 20px;
+  margin-bottom: 25px;
 }
 
 .dompet-card {
-  padding: 12px;
+  padding: 10px;
   border-radius: 10px;
   color: #fff;
   font-weight: bold;
@@ -26,6 +29,10 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: 80px;
+}
+
+.btn-add-dompet {
+  padding-bottom: 20px;
 }
 
 .biru {
@@ -52,8 +59,8 @@
   justify-content: space-between;
   padding: 8px 0;
   border-bottom: 1px solid #eee;
-  font-size: 14px;
-} */
+  font-size: 15px;
+}
 
 
 body {
