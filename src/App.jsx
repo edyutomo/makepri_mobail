@@ -11,8 +11,9 @@ import Dompet from './pages/Dompet';
 import Transaksi from './pages/Transaksi';
 import Profile from './pages/Profile';
 import Editprofile from './pages/Editprofile';
-import Trspendapatan from './pages/Trspendapatan';
+import TambahTransaksi from './pages/TambahTransaksi';
 import TrsPengeluaran from './pages/trspengeluaran';
+import DompetTambah from './pages/DompetTambah';
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -59,10 +60,12 @@ const App = () => {
           <Route exact path="/home" component={Home} />
           <Route exact path="/dompet" component={Dompet} />
           <Route exact path="/transaksi" component={Transaksi} />
-          <Route exact path="/trspendapatan" component={Trspendapatan} />
+          <Route exact path="/tambahtransaksi" component={TambahTransaksi} />
           <Route exact path="/pengeluaran" component={TrsPengeluaran} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/Editprofile" component={Editprofile} />
+          <Route path="/dompet-tambah" component={DompetTambah} exact />
+
           <Redirect to="/home" />
         </IonRouterOutlet>
       </IonReactRouter>

@@ -116,6 +116,7 @@
 
 import React, { useState, useEffect } from "react";
 import {
+<<<<<<< HEAD
   IonPage,
   IonHeader,
   IonToolbar,
@@ -129,6 +130,16 @@ import {
 import { homeOutline, listOutline, walletOutline, personOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import "../css/dompet.css";
+=======
+  IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonFooter,
+  IonTabBar, IonTabButton, IonIcon, IonLabel, IonSpinner,IonButton
+} from '@ionic/react';
+import { homeOutline, walletOutline, personOutline, listOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import '../css/dompet.css';
+import logo from '../fto/makepri.png';
+>>>>>>> 450b7a0a6c884a0d512e844b810e28650cc94762
 
 const API_URL = "https://apitugas3.xyz/api/dompet";
 
@@ -175,6 +186,7 @@ const Dompet = () => {
         </IonToolbar>
       </IonHeader>
 
+<<<<<<< HEAD
       {/* Konten utama */}
       <div className="container">
         <div className="wallet-list">
@@ -185,6 +197,40 @@ const Dompet = () => {
             </div>
           ))}
         </div>
+=======
+      <IonContent fullscreen>
+  <div className="dompet">
+    <h3>Dompet Saya</h3>
+
+    {loading ? (
+      <IonSpinner name="crescent" />
+    ) : (
+      <div className="dompet-list">
+        {dompetList.length === 0 ? (
+          <p>Belum ada data dompet.</p>
+        ) : (
+          dompetList.map((dompet, index) => (
+            <div className={`dompet-card ${index % 2 === 0 ? 'biru' : 'putih'}`} key={dompet.id}>
+              <p>{dompet.nama}</p>
+              <span>Rp {Number(dompet.saldo).toLocaleString('id-ID')}</span>
+            </div>
+          ))
+        )}
+      </div>
+    )}
+
+    {/* Tombol Tambah Dompet */}
+    <IonButton
+      expand="block"
+      color="success"
+      onClick={() => history.push('/dompet-tambah')}
+      style={{ marginTop: '16px', marginLeft: '16px', marginRight: '16px' }}
+    >
+      + Tambah Dompet
+    </IonButton>
+  </div>
+</IonContent>
+>>>>>>> 450b7a0a6c884a0d512e844b810e28650cc94762
 
         <h2>Riwayat Transfer</h2>
         <table>
