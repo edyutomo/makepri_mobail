@@ -75,7 +75,6 @@ const Profile: React.FC = () => {
               <img src={user?.foto_profile ?? logo} alt="Foto Profil" className="profile-img" />
               <h3>{user?.name ?? 'Administrator'}</h3>
               <p>Email: {user?.email ?? '-'}</p>
-              <p>Saldo: Rp {parseInt(user?.saldo || 0).toLocaleString()}</p>
               <button className="edit-btn" onClick={handleEdit}>
                 Edit Profil
               </button>

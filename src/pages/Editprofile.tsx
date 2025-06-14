@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../css/editprofile.css";
 import axios from "axios";
 
@@ -16,9 +16,20 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const [username, setUsername] = useState(user?.name ?? "");
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [profilePic, setProfilePic] = useState<string>(user?.foto ?? "");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>(user?.foto ?? "");
+  const [loading, setLoading] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Buat preview file gambar baru
+  useEffect(() => {
+    if (selectedFile) {
+      const objectUrl = URL.createObjectURL(selectedFile);
+      setPreviewUrl(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl); // cleanup
+    }
+  }, [selectedFile]);
 
   const handleImageClick = () => {
     fileInputRef.current?.click();
@@ -26,27 +37,47 @@ const EditProfile: React.FC<EditProfileProps> = ({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-      const previewUrl = URL.createObjectURL(file);
-      setProfilePic(previewUrl);
+      setSelectedFile(e.target.files[0]);
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Token tidak ditemukan. Silakan login ulang.");
+      return;
+    }
+
+    // Cek apakah ada perubahan
+    const noChange =
+      username === user?.name &&
+      !oldPassword &&
+      !newPassword &&
+      !selectedFile;
+
+    if (noChange) {
+      alert("Tidak ada perubahan yang dilakukan.");
+      return;
+    }
+
+    if (newPassword && newPassword.length < 6) {
+      alert("Password baru minimal 6 karakter.");
+      return;
+    }
+
     try {
-      const token = localStorage.getItem("token");
+      setLoading(true);
       const formData = new FormData();
       formData.append("name", username);
-      formData.append("old_password", oldPassword);
-      formData.append("new_password", newPassword);
+      if (oldPassword) formData.append("old_password", oldPassword);
+      if (newPassword) formData.append("new_password", newPassword);
       if (selectedFile) {
-        formData.append("foto", selectedFile);
+        formData.append("foto_profile", selectedFile);
       }
-
-      const response = await axios.put(
-        "https://apitugas3.xyz/api/update-profile",
+formData.append("_method", "PUT");
+      const response = await axios.post(
+        "https://apitugas3.xyz/api/user",
         formData,
         {
           headers: {
@@ -57,13 +88,15 @@ const EditProfile: React.FC<EditProfileProps> = ({
       );
 
       alert("Profil berhasil diperbarui!");
-      onSave(response.data.user);
+      onSave(response.data.data);
     } catch (error: any) {
       console.error("Gagal update profil:", error.response?.data || error);
       alert(
         error.response?.data?.message ||
           "Gagal update profil. Silakan coba lagi."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -71,7 +104,7 @@ const EditProfile: React.FC<EditProfileProps> = ({
     <div className="edit-profile-box">
       <h2>Edit Profile</h2>
       <img
-        src={profilePic}
+        src={previewUrl || "/default-profile.png"}
         alt="Foto Profil"
         className="profile-img"
         onClick={handleImageClick}
@@ -85,31 +118,39 @@ const EditProfile: React.FC<EditProfileProps> = ({
         accept="image/*"
         onChange={handleFileChange}
       />
+      {selectedFile && (
+        <small style={{ display: "block", marginBottom: "10px" }}>
+          Foto dipilih: {selectedFile.name}
+        </small>
+      )}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           value={username}
           placeholder="Username"
           onChange={(e) => setUsername(e.target.value)}
+          disabled={loading}
         />
         <input
           type="password"
           placeholder="Password Lama"
           value={oldPassword}
           onChange={(e) => setOldPassword(e.target.value)}
+          disabled={loading}
         />
         <input
           type="password"
           placeholder="Password Baru"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
+          disabled={loading}
         />
         <div className="edit-buttons">
-          <button type="button" className="btn-cancel" onClick={onCancel}>
+          <button type="button" className="btn-cancel" onClick={onCancel} disabled={loading}>
             Batal
           </button>
-          <button type="submit" className="btn-save">
-            Konfirmasi
+          <button type="submit" className="btn-save" disabled={loading}>
+            {loading ? "Menyimpan..." : "Konfirmasi"}
           </button>
         </div>
       </form>
