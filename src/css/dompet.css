@@ -1,16 +1,20 @@
 .dompet {
   padding: 40px;
   --primary-blue: #007bff;
-  background-color: #ffffff;
+  background-color: #d1d1d1;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  margin-bottom: 24px;
-  width: 100%;
+  margin-bottom: 20px;
   max-width: 450px;
+  width: 100%;
+  margin-top: 0%;
+  /* margin-left: 12%; */
+  padding: 20px;
 }
 
 .dompet h3 {
   margin-bottom: 30px;
+  
 }
 
 .dompet-list {
