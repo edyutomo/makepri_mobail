@@ -3,7 +3,6 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import "../css/TambahTransaksi.css";
 
-
 function TambahTransaksi() {
   const history = useHistory();
   const [kategori, setKategori] = useState([]);
@@ -90,6 +89,14 @@ function TambahTransaksi() {
               </option>
             ))}
           </select>
+
+          {/* Tombol Edit Kategori */}
+          <button
+            className="button-edit-kategori"
+            onClick={() => history.push("/kategori")}
+          >
+            ✎ Edit Kategori
+          </button>
         </div>
 
         <div>
@@ -132,17 +139,16 @@ function TambahTransaksi() {
         </div>
 
         <div className="button-group">
-  <button className="button-primary" onClick={simpanTransaksi}>
-    Simpan
-  </button>
-  <button
-    className="button-secondary"
-    onClick={() => history.push("/transaksi")}
-  >
-    Batal
-  </button>
-</div>
-
+          <button className="button-primary" onClick={simpanTransaksi}>
+            Simpan
+          </button>
+          <button
+            className="button-secondary"
+            onClick={() => history.push("/transaksi")}
+          >
+            Batal
+          </button>
+        </div>
       </div>
     </div>
   );

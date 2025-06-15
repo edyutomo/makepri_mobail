@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
 import {
   IonPage,
   IonHeader,
@@ -12,6 +11,7 @@ import {
   IonLabel,
   IonFab,
   IonFabButton,
+  useIonRouter,
 } from "@ionic/react";
 import { homeOutline, walletOutline, personOutline, listOutline, addOutline } from "ionicons/icons";
 import axios from "axios";
@@ -23,17 +23,17 @@ const Transaksi = () => {
   const [transactions, setTransactions] = useState([]);
   const [kategori, setKategori] = useState([]);
   const [dompet, setDompet] = useState([]);
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear()); // Tahun default ke tahun ini
-  const [selectedMonth, setSelectedMonth] = useState((new Date().getMonth() + 1).toString().padStart(2, "0")); // Bulan default ke bulan ini
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [selectedMonth, setSelectedMonth] = useState((new Date().getMonth() + 1).toString().padStart(2, "0"));
 
-  const history = useHistory();
+  const router = useIonRouter();
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
 
   useEffect(() => {
     fetchTransactions();
     fetchKategoriDompet();
-  }, [selectedYear, selectedMonth]); // Fetch data saat tahun/bulan berubah
+  }, [selectedYear, selectedMonth]);
 
   const fetchTransactions = async () => {
     try {
@@ -78,10 +78,8 @@ const Transaksi = () => {
 
       <IonContent fullscreen>
         <div className="transaksi-container">
-            <h1>Transaksi</h1>
-         
+          <h1>Transaksi</h1>
 
-          {/* Filter Tahun & Bulan */}
           <div className="filter-container">
             <select value={selectedYear} onChange={(e) => setSelectedYear(parseInt(e.target.value))}>
               {Array.from({ length: 10 }, (_, i) => {
@@ -97,13 +95,11 @@ const Transaksi = () => {
             </select>
           </div>
 
-          {/* Toggle Pendapatan & Pengeluaran */}
           <div className="income-expense-toggle">
             <button onClick={() => setIsIncome(true)} className={isIncome ? "active" : ""}>Pendapatan</button>
             <button onClick={() => setIsIncome(false)} className={!isIncome ? "active" : ""}>Pengeluaran</button>
           </div>
 
-          {/* Daftar Transaksi */}
           <div className="transaction-list">
             {filteredTransactions.length > 0 ? (
               filteredTransactions.map((transaction, index) => (
@@ -121,7 +117,7 @@ const Transaksi = () => {
         </div>
 
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={() => history.push("/tambahtransaksi")}>
+          <IonFabButton onClick={() => router.push("/tambahtransaksi", "forward")}>
             <IonIcon icon={addOutline} />
           </IonFabButton>
         </IonFab>
@@ -129,19 +125,19 @@ const Transaksi = () => {
 
       <IonFooter>
         <IonTabBar>
-          <IonTabButton tab="home" onClick={() => history.push("/home")}>
+          <IonTabButton tab="home" onClick={() => router.push("/home", "root")}>
             <IonIcon icon={homeOutline} />
             <IonLabel>Home</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="transaksi" onClick={() => history.push("/transaksi")}>
+          <IonTabButton tab="transaksi" onClick={() => router.push("/transaksi", "root")}>
             <IonIcon icon={listOutline} />
             <IonLabel>Transaksi</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="dompet" onClick={() => history.push("/dompet")}>
+          <IonTabButton tab="dompet" onClick={() => router.push("/dompet", "root")}>
             <IonIcon icon={walletOutline} />
             <IonLabel>Dompet</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="profile" onClick={() => history.push("/profile")}>
+          <IonTabButton tab="profile" onClick={() => router.push("/profile", "root")}>
             <IonIcon icon={personOutline} />
             <IonLabel>Profil</IonLabel>
           </IonTabButton>

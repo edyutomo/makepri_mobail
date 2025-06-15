@@ -14,6 +14,12 @@ import Editprofile from './pages/Editprofile';
 import TambahTransaksi from './pages/TambahTransaksi';
 import TrsPengeluaran from './pages/trspengeluaran';
 import DompetTambah from './pages/DompetTambah';
+//import EditKategori from "./pages/EditKategori";
+
+
+//import Kategori from "./pages/Kategori";
+// import TambahKategori from "./pages/TambahKategori";
+//import Editkategori from './pages/EditKategori';
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -27,9 +33,11 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.system.css';
 
+
 import './theme/variables.css';
 
 import { App as CapacitorApp } from '@capacitor/app'; // untuk exitApp
+
 
 setupIonicReact();
 
@@ -61,6 +69,10 @@ const App = () => {
           <Route exact path="/dompet" component={Dompet} />
           <Route exact path="/transaksi" component={Transaksi} />
           <Route exact path="/tambahtransaksi" component={TambahTransaksi} />
+           {/* <Route path="/kategori" exact component={Kategori} /> */}
+          {/*<Route path="/tambahkategori" component={TambahKategori} />*/}
+          {/* <Route path="/kategori/edit/:id" element={<EditKategori />} /> 
+          <Route exact path="/editkategori" component={EditKategori} />*/}
           <Route exact path="/pengeluaran" component={TrsPengeluaran} />
           <Route exact path="/profile" component={Profile} />
           <Route exact path="/Editprofile" component={Editprofile} />
