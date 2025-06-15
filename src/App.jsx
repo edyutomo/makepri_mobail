@@ -14,6 +14,7 @@ import Editprofile from './pages/Editprofile';
 import TambahTransaksi from './pages/TambahTransaksi';
 import TrsPengeluaran from './pages/trspengeluaran';
 import DompetTambah from './pages/DompetTambah';
+import Kategori from './pages/Kategori';
 //import EditKategori from "./pages/EditKategori";
 
 
@@ -69,7 +70,7 @@ const App = () => {
           <Route exact path="/dompet" component={Dompet} />
           <Route exact path="/transaksi" component={Transaksi} />
           <Route exact path="/tambahtransaksi" component={TambahTransaksi} />
-           {/* <Route path="/kategori" exact component={Kategori} /> */}
+           <Route path="/kategori" exact component={Kategori} />
           {/*<Route path="/tambahkategori" component={TambahKategori} />*/}
           {/* <Route path="/kategori/edit/:id" element={<EditKategori />} /> 
           <Route exact path="/editkategori" component={EditKategori} />*/}

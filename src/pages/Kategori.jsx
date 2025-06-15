@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom"; // GANTI useNavigate
 import "../css/kategori.css";
 import {
   IonFooter,
@@ -19,7 +19,7 @@ import {
 function Kategori() {
   const [kategori, setKategori] = useState([]);
   const [filter, setFilter] = useState(null);
-  const navigate = useNavigate();
+  const history = useHistory(); // GANTI dari useNavigate
 
   const token = localStorage.getItem("token");
   const headers = {
@@ -64,7 +64,7 @@ function Kategori() {
         <div className="kategori-header">
           <h2>Kategori</h2>
           <button
-            onClick={() => navigate("/tambahkategori")}
+            onClick={() => history.push("/tambahkategori")}
             className="btn tambah-btn"
           >
             + Tambah Kategori
@@ -100,7 +100,7 @@ function Kategori() {
                     <td>
                       <button
                         className="btn edit-btn"
-                        onClick={() => navigate(`/editkategori/${k.id}`)}
+                        onClick={() => history.push(`/editkategori/${k.id}`)}
                       >
                         Edit
                       </button>
@@ -131,7 +131,7 @@ function Kategori() {
 
         <div className="kembali-container">
           <button
-            onClick={() => navigate("/transaksi")}
+            onClick={() => history.push("/transaksi")}
             className="btn kembali-btn"
           >
             ← Kembali
@@ -141,22 +141,22 @@ function Kategori() {
 
       <IonFooter>
         <IonTabBar>
-          <IonTabButton tab="home" onClick={() => navigate("/home")}>
+          <IonTabButton tab="home" onClick={() => history.push("/home")}>
             <IonIcon icon={homeOutline} />
             <IonLabel>Home</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="transaksi" onClick={() => navigate("/transaksi")}>
+          <IonTabButton tab="transaksi" onClick={() => history.push("/transaksi")}>
             <IonIcon icon={listOutline} />
             <IonLabel>Transaksi</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="dompet" onClick={() => navigate("/dompet")}>
+          <IonTabButton tab="dompet" onClick={() => history.push("/dompet")}>
             <IonIcon icon={walletOutline} />
             <IonLabel>Dompet</IonLabel>
           </IonTabButton>
 
-          <IonTabButton tab="profile" onClick={() => navigate("/profile")}>
+          <IonTabButton tab="profile" onClick={() => history.push("/profile")}>
             <IonIcon icon={personOutline} />
             <IonLabel>Profil</IonLabel>
           </IonTabButton>
