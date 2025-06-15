@@ -11,29 +11,41 @@
 
 /* Animasi */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { 
+  from {
     opacity: 0;
     transform: translateY(20px);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-  100% { transform: scale(1); }
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Layout Utama */
@@ -160,7 +172,8 @@
   gap: 12px;
 }
 
-.edit-btn, .logout-btn {
+.edit-btn,
+.logout-btn {
   padding: 14px;
   border: none;
   border-radius: 8px;
@@ -190,6 +203,11 @@
 
 .btn-icon {
   font-size: 18px;
+}
+
+.btn-icon1 {
+  font-size: 18px;
+  margin-left: 300px;
 }
 
 /* Loading State */
@@ -239,7 +257,7 @@
   .profile-card {
     padding: 20px;
   }
-  
+
   .profile-img {
     width: 100px;
     height: 100px;

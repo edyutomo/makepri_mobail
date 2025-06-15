@@ -16,9 +16,16 @@ import {
   IonInput,
   IonItem,
   IonButtons,
-  useIonToast
+  useIonToast,
 } from "@ionic/react";
-import { homeOutline, walletOutline, personOutline, listOutline, addOutline, arrowBackOutline } from "ionicons/icons";
+import {
+  homeOutline,
+  walletOutline,
+  personOutline,
+  listOutline,
+  addOutline,
+  arrowBackOutline,
+} from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "../css/dompet.css";
@@ -53,9 +60,9 @@ const Dompet: React.FC = () => {
     setLoading(true);
     try {
       const response = await axios.get(API_URL, {
-        headers: { 
-          Authorization: `Bearer ${token}`, 
-          Accept: "application/json" 
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
         },
       });
       setDompetList(response.data.data || []);
@@ -99,11 +106,11 @@ const Dompet: React.FC = () => {
       const response = await axios.post(
         API_URL,
         { nama: newDompet.nama, saldo: newDompet.saldo },
-        { 
-          headers: { 
-            Authorization: `Bearer ${token}`, 
-            Accept: "application/json" 
-          } 
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            Accept: "application/json",
+          },
         }
       );
 
@@ -112,7 +119,7 @@ const Dompet: React.FC = () => {
         duration: 2000,
         color: "success",
       });
-      
+
       setDompetList([...dompetList, response.data.data]);
       setShowModal(false);
       setNewDompet({ nama: "", saldo: "" });
@@ -130,12 +137,9 @@ const Dompet: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar className="blue-toolbar">
-          {/* <IonButtons slot="start">
-            <IonButton onClick={() => history.goBack()}>
-              <IonIcon icon={arrowBackOutline} />
-            </IonButton>
-          </IonButtons> */}
-          <IonTitle>Dompet Saya</IonTitle>
+          <div className="toolbar-content">
+            <img src={logo} alt="Logo" className="toolbar-logo pulse" />
+          </div>
         </IonToolbar>
       </IonHeader>
 
@@ -150,8 +154,8 @@ const Dompet: React.FC = () => {
             <>
               <div className="dompet-header">
                 <h2 className="dompet-title">Daftar Dompet</h2>
-                <IonButton 
-                  className="add-button hover-scale" 
+                <IonButton
+                  className="add-button hover-scale"
                   onClick={() => setShowModal(true)}
                 >
                   <IonIcon icon={addOutline} slot="start" />
@@ -182,45 +186,49 @@ const Dompet: React.FC = () => {
           )}
         </div>
 
-        <IonModal 
-          isOpen={showModal} 
+        <IonModal
+          isOpen={showModal}
           onDidDismiss={() => setShowModal(false)}
           className="dompet-modal"
         >
           <div className="modal-content">
             <h2 className="modal-title">Tambah Dompet Baru</h2>
-            
+
             <IonItem className="form-item">
               <IonInput
                 placeholder="Nama Dompet"
                 value={newDompet.nama}
-                onIonChange={(e) => setNewDompet({ ...newDompet, nama: e.detail.value! })}
+                onIonChange={(e) =>
+                  setNewDompet({ ...newDompet, nama: e.detail.value! })
+                }
                 className="form-input"
               />
             </IonItem>
-            
+
             <IonItem className="form-item">
               <IonInput
                 type="number"
                 placeholder="Saldo Awal"
                 value={newDompet.saldo}
-                onIonChange={(e) => setNewDompet({ ...newDompet, saldo: e.detail.value! })}
+                onIonChange={(e) =>
+                  setNewDompet({ ...newDompet, saldo: e.detail.value! })
+                }
                 className="form-input"
               />
             </IonItem>
-            
+
             <div className="modal-actions">
-              <IonButton 
-                expand="block" 
-                className="save-button hover-scale" 
+              <IonButton
+                expand="block"
+                className="save-button hover-scale"
                 onClick={handleTambahDompet}
               >
                 Simpan Dompet
               </IonButton>
-              <IonButton 
-                expand="block" 
-                fill="outline" 
-                className="cancel-button hover-scale" 
+              <IonButton
+                expand="block"
+                fill="outline"
+                className="cancel-button hover-scale"
                 onClick={() => setShowModal(false)}
               >
                 Batal
@@ -236,7 +244,10 @@ const Dompet: React.FC = () => {
             <IonIcon icon={homeOutline} />
             <IonLabel>Beranda</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="transaksi" onClick={() => history.push("/transaksi")}>
+          <IonTabButton
+            tab="transaksi"
+            onClick={() => history.push("/transaksi")}
+          >
             <IonIcon icon={listOutline} />
             <IonLabel>Transaksi</IonLabel>
           </IonTabButton>

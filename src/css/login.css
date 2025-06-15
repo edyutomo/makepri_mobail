@@ -5,12 +5,12 @@
   align-items: center;
   min-height: 100vh; /* Menggunakan min-height bukan height */
   padding: 20px;
-  background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+  background: linear-gradient(135deg, #0081d1 0%, #182848 100%);
   animation: gradientBG 15s ease infinite;
   background-size: 400% 400%;
   box-sizing: border-box;
   position: relative; /* tambahkan ini */
-  z-index: 0; 
+  z-index: 0;
 }
 
 @keyframes gradientBG {
@@ -66,13 +66,12 @@
 }
 
 .form-wrapper::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   height: 5px;
-  background: linear-gradient(to right, #4b6cb7, #182848);
   animation: borderGrow 0.5s ease-out forwards;
 }
 
@@ -95,7 +94,7 @@
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+  background: linear-gradient(135deg, #4b6cb7 0%, #0081d1 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -175,7 +174,7 @@
 
 .login-button {
   margin-top: 10px;
-  --background: linear-gradient(to right, #4b6cb7, #182848);
+  --background: linear-gradient(to right, #0081d1, #0081d1);
   --background-activated: linear-gradient(to right, #3a5a9c, #121d3b);
   --border-radius: 12px;
   height: 50px;
@@ -187,7 +186,7 @@
 }
 
 .login-button::after {
-  content: '';
+  content: "";
   position: absolute;
   top: -50%;
   left: -60%;
@@ -238,7 +237,7 @@
 }
 
 .register-action::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   left: 0;

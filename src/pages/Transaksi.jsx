@@ -14,15 +14,15 @@ import {
   useIonRouter,
   IonTitle,
   IonButtons,
-  IonButton
+  IonButton,
 } from "@ionic/react";
-import { 
-  homeOutline, 
-  walletOutline, 
-  personOutline, 
-  listOutline, 
+import {
+  homeOutline,
+  walletOutline,
+  personOutline,
+  listOutline,
   addOutline,
-  arrowBackOutline
+  arrowBackOutline,
 } from "ionicons/icons";
 import axios from "axios";
 import "../css/transaksi.css";
@@ -33,7 +33,9 @@ const Transaksi = () => {
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-  const [selectedMonth, setSelectedMonth] = useState((new Date().getMonth() + 1).toString().padStart(2, "0"));
+  const [selectedMonth, setSelectedMonth] = useState(
+    (new Date().getMonth() + 1).toString().padStart(2, "0")
+  );
 
   const router = useIonRouter();
   const token = localStorage.getItem("token");
@@ -47,7 +49,7 @@ const Transaksi = () => {
     try {
       setIsLoading(true);
       const res = await axios.get(
-        `https://apitugas3.xyz/api/transaksi?tahun=${selectedYear}&bulan=${selectedMonth}`, 
+        `https://apitugas3.xyz/api/transaksi?tahun=${selectedYear}&bulan=${selectedMonth}`,
         { headers }
       );
       setTransactions(res.data.data || []);
@@ -60,26 +62,28 @@ const Transaksi = () => {
 
   const filteredTransactions = transactions.filter((trx) => {
     const tipeKategori = trx.kategori?.tipe?.toLowerCase();
-    return isIncome ? tipeKategori === "pemasukan" : tipeKategori === "pengeluaran";
+    return isIncome
+      ? tipeKategori === "pemasukan"
+      : tipeKategori === "pengeluaran";
   });
 
   const formatTanggal = (tgl) => {
     if (!tgl) return "-";
     const dateObj = new Date(tgl);
-    return `${dateObj.getDate().toString().padStart(2, "0")}-${(dateObj.getMonth() + 1)
-      .toString().padStart(2, "0")}-${dateObj.getFullYear()}`;
+    return `${dateObj.getDate().toString().padStart(2, "0")}-${(
+      dateObj.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${dateObj.getFullYear()}`;
   };
 
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar className="blue-toolbar">
-          {/* <IonButtons slot="start">
-            <IonButton onClick={() => router.goBack()}>
-              <IonIcon slot="icon-only" icon={arrowBackOutline} />
-            </IonButton>
-          </IonButtons> */}
-          <IonTitle>Manajemen Transaksi</IonTitle>
+          <div className="toolbar-content">
+            <img src={logo} alt="Logo" className="toolbar-logo pulse" />
+          </div>
         </IonToolbar>
       </IonHeader>
 
@@ -90,37 +94,45 @@ const Transaksi = () => {
           {/* Filter Section */}
           <div className="filter-section">
             <div className="filter-container">
-              <select 
-                value={selectedYear} 
+              <select
+                value={selectedYear}
                 onChange={(e) => setSelectedYear(parseInt(e.target.value))}
                 className="filter-select"
               >
                 {Array.from({ length: 10 }, (_, i) => {
                   const year = new Date().getFullYear() - i;
-                  return <option key={year} value={year}>{year}</option>;
+                  return (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  );
                 })}
               </select>
-              <select 
-                value={selectedMonth} 
+              <select
+                value={selectedMonth}
                 onChange={(e) => setSelectedMonth(e.target.value)}
                 className="filter-select"
               >
                 {Array.from({ length: 12 }, (_, i) => {
                   const month = (i + 1).toString().padStart(2, "0");
-                  return <option key={month} value={month}>{month}</option>;
+                  return (
+                    <option key={month} value={month}>
+                      {month}
+                    </option>
+                  );
                 })}
               </select>
             </div>
 
             <div className="income-expense-toggle">
-              <button 
-                onClick={() => setIsIncome(true)} 
+              <button
+                onClick={() => setIsIncome(true)}
                 className={`toggle-btn ${isIncome ? "active" : ""}`}
               >
                 Pendapatan
               </button>
-              <button 
-                onClick={() => setIsIncome(false)} 
+              <button
+                onClick={() => setIsIncome(false)}
                 className={`toggle-btn ${!isIncome ? "active" : ""}`}
               >
                 Pengeluaran
@@ -138,18 +150,27 @@ const Transaksi = () => {
             <div className="transaction-list">
               {filteredTransactions.length > 0 ? (
                 filteredTransactions.map((transaction, index) => (
-                  <div 
-                    key={index} 
-                    className={`transaction-item ${isIncome ? "income" : "expense"} slide-up`}
+                  <div
+                    key={index}
+                    className={`transaction-item ${
+                      isIncome ? "income" : "expense"
+                    } slide-up`}
                     style={{ animationDelay: `${index * 0.05}s` }}
                   >
-                    <div className="transaction-date">{formatTanggal(transaction.tanggal)}</div>
+                    <div className="transaction-date">
+                      {formatTanggal(transaction.tanggal)}
+                    </div>
                     <div className="transaction-info">
-                      <div className="transaction-category">{transaction.kategori?.nama || "-"}</div>
-                      <div className="transaction-description">{transaction.keterangan || "-"}</div>
+                      <div className="transaction-category">
+                        {transaction.kategori?.nama || "-"}
+                      </div>
+                      <div className="transaction-description">
+                        {transaction.keterangan || "-"}
+                      </div>
                     </div>
                     <div className="transaction-amount">
-                      {isIncome ? "+" : "-"} Rp{parseInt(transaction.jumlah).toLocaleString()}
+                      {isIncome ? "+" : "-"} Rp
+                      {parseInt(transaction.jumlah).toLocaleString()}
                     </div>
                   </div>
                 ))
@@ -167,7 +188,7 @@ const Transaksi = () => {
 
         {/* Floating Action Button */}
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton 
+          <IonFabButton
             onClick={() => router.push("/tambahtransaksi", "forward")}
             className="fab-button"
           >
@@ -182,7 +203,10 @@ const Transaksi = () => {
             <IonIcon icon={homeOutline} />
             <IonLabel>Beranda</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="transaksi" onClick={() => router.push("/transaksi")}>
+          <IonTabButton
+            tab="transaksi"
+            onClick={() => router.push("/transaksi")}
+          >
             <IonIcon icon={listOutline} />
             <IonLabel>Transaksi</IonLabel>
           </IonTabButton>
