@@ -22,12 +22,11 @@ const EditProfile: React.FC<EditProfileProps> = ({
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Buat preview file gambar baru
   useEffect(() => {
     if (selectedFile) {
       const objectUrl = URL.createObjectURL(selectedFile);
       setPreviewUrl(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl); // cleanup
+      return () => URL.revokeObjectURL(objectUrl);
     }
   }, [selectedFile]);
 
@@ -49,7 +48,6 @@ const EditProfile: React.FC<EditProfileProps> = ({
       return;
     }
 
-    // Cek apakah ada perubahan
     const noChange =
       username === user?.name &&
       !oldPassword &&
@@ -75,7 +73,8 @@ const EditProfile: React.FC<EditProfileProps> = ({
       if (selectedFile) {
         formData.append("foto_profile", selectedFile);
       }
-formData.append("_method", "PUT");
+      formData.append("_method", "PUT");
+
       const response = await axios.post(
         "https://apitugas3.xyz/api/user",
         formData,
@@ -103,6 +102,8 @@ formData.append("_method", "PUT");
   return (
     <div className="edit-profile-box">
       <h2>Edit Profile</h2>
+
+      {/* Foto Profil + Ganti */}
       <img
         src={previewUrl || "/default-profile.png"}
         alt="Foto Profil"
@@ -116,6 +117,7 @@ formData.append("_method", "PUT");
         ref={fileInputRef}
         style={{ display: "none" }}
         accept="image/*"
+        capture="user" // kamera depan, atau gunakan "environment" untuk belakang
         onChange={handleFileChange}
       />
       {selectedFile && (
@@ -123,6 +125,26 @@ formData.append("_method", "PUT");
           Foto dipilih: {selectedFile.name}
         </small>
       )}
+
+      {/* Tombol ambil dari kamera/galeri */}
+      <div style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
+        <button
+          type="button"
+          onClick={handleImageClick}
+          style={{
+            padding: "6px 12px",
+            backgroundColor: "#007bff",
+            color: "#fff",
+            border: "none",
+            borderRadius: "4px",
+            cursor: "pointer",
+          }}
+        >
+          Ambil dari Kamera / Galeri
+        </button>
+      </div>
+
+      {/* Form */}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -145,8 +167,14 @@ formData.append("_method", "PUT");
           onChange={(e) => setNewPassword(e.target.value)}
           disabled={loading}
         />
+
         <div className="edit-buttons">
-          <button type="button" className="btn-cancel" onClick={onCancel} disabled={loading}>
+          <button
+            type="button"
+            className="btn-cancel"
+            onClick={onCancel}
+            disabled={loading}
+          >
             Batal
           </button>
           <button type="submit" className="btn-save" disabled={loading}>
