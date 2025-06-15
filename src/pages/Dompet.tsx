@@ -15,8 +15,10 @@ import {
   IonModal,
   IonInput,
   IonItem,
+  IonButtons,
+  useIonToast
 } from "@ionic/react";
-import { homeOutline, walletOutline, personOutline, listOutline } from "ionicons/icons";
+import { homeOutline, walletOutline, personOutline, listOutline, addOutline, arrowBackOutline } from "ionicons/icons";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import "../css/dompet.css";
@@ -30,6 +32,7 @@ const Dompet: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [newDompet, setNewDompet] = useState({ nama: "", saldo: "" });
+  const [present] = useIonToast();
 
   useEffect(() => {
     fetchDompet();
@@ -38,20 +41,32 @@ const Dompet: React.FC = () => {
   const fetchDompet = async () => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Token tidak ditemukan. Silakan login ulang.");
+      present({
+        message: "Sesi telah berakhir, silakan login kembali",
+        duration: 2000,
+        color: "danger",
+      });
       history.push("/login");
       return;
     }
 
+    setLoading(true);
     try {
       const response = await axios.get(API_URL, {
-        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+        headers: { 
+          Authorization: `Bearer ${token}`, 
+          Accept: "application/json" 
+        },
       });
       setDompetList(response.data.data || []);
     } catch (error: any) {
       console.error("Gagal mengambil data dompet:", error);
-      alert("Gagal mengambil data dompet.");
-      if (error.response && error.response.status === 401) {
+      present({
+        message: "Gagal mengambil data dompet",
+        duration: 2000,
+        color: "danger",
+      });
+      if (error.response?.status === 401) {
         localStorage.removeItem("token");
         history.push("/login");
       }
@@ -61,8 +76,21 @@ const Dompet: React.FC = () => {
   };
 
   const handleTambahDompet = async () => {
-    if (!newDompet.nama || !newDompet.saldo) {
-      alert("Nama dan saldo awal wajib diisi.");
+    if (!newDompet.nama) {
+      present({
+        message: "Nama dompet wajib diisi",
+        duration: 2000,
+        color: "warning",
+      });
+      return;
+    }
+
+    if (!newDompet.saldo || isNaN(Number(newDompet.saldo))) {
+      present({
+        message: "Saldo awal harus berupa angka",
+        duration: 2000,
+        color: "warning",
+      });
       return;
     }
 
@@ -71,49 +99,81 @@ const Dompet: React.FC = () => {
       const response = await axios.post(
         API_URL,
         { nama: newDompet.nama, saldo: newDompet.saldo },
-        { headers: { Authorization: `Bearer ${token}`, Accept: "application/json" } }
+        { 
+          headers: { 
+            Authorization: `Bearer ${token}`, 
+            Accept: "application/json" 
+          } 
+        }
       );
 
-      alert("Dompet berhasil ditambahkan!");
-      setDompetList([...dompetList, response.data.data]); // Menambahkan dompet baru ke daftar
+      present({
+        message: "Dompet berhasil ditambahkan!",
+        duration: 2000,
+        color: "success",
+      });
+      
+      setDompetList([...dompetList, response.data.data]);
       setShowModal(false);
       setNewDompet({ nama: "", saldo: "" });
     } catch (error) {
       console.error("Gagal menambah dompet:", error);
-      alert("Gagal menambah dompet.");
+      present({
+        message: "Gagal menambah dompet",
+        duration: 2000,
+        color: "danger",
+      });
     }
   };
 
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <div className="toolbar-content">
-            <img src={logo} alt="Logo" className="toolbar-logo" />
-          </div>
+        <IonToolbar className="blue-toolbar">
+          {/* <IonButtons slot="start">
+            <IonButton onClick={() => history.goBack()}>
+              <IonIcon icon={arrowBackOutline} />
+            </IonButton>
+          </IonButtons> */}
+          <IonTitle>Dompet Saya</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
-        <div className="dompet">
-          <h3>Dompet Saya</h3>
-
+      <IonContent fullscreen className="blue-content">
+        <div className="dompet-container">
           {loading ? (
-            <IonSpinner name="crescent" />
+            <div className="loading-container">
+              <IonSpinner name="crescent" className="spinner" />
+              <p>Memuat data dompet...</p>
+            </div>
           ) : (
             <>
-              <IonButton expand="block" onClick={() => setShowModal(true)} className="btn-add-dompet">
-                Tambah Dompet
-              </IonButton>
+              <div className="dompet-header">
+                <h2 className="dompet-title">Daftar Dompet</h2>
+                <IonButton 
+                  className="add-button hover-scale" 
+                  onClick={() => setShowModal(true)}
+                >
+                  <IonIcon icon={addOutline} slot="start" />
+                  Tambah Dompet
+                </IonButton>
+              </div>
 
               <div className="dompet-list">
                 {dompetList.length === 0 ? (
-                  <p>Belum ada data dompet.</p>
+                  <div className="empty-state">
+                    <IonIcon icon={walletOutline} className="empty-icon" />
+                    <p>Belum ada dompet terdaftar</p>
+                  </div>
                 ) : (
-                  dompetList.map((dompet, index) => (
-                    <div className={`dompet-card ${index % 2 === 0 ? "biru" : "putih"}`} key={dompet.id}>
-                      <p>{dompet.nama}</p>
-                      <span>Rp {Number(dompet.saldo).toLocaleString("id-ID")}</span>
+                  dompetList.map((dompet) => (
+                    <div className="dompet-card slide-up" key={dompet.id}>
+                      <div className="dompet-info">
+                        <h3 className="dompet-name">{dompet.nama}</h3>
+                        <p className="dompet-balance">
+                          Rp {Number(dompet.saldo).toLocaleString("id-ID")}
+                        </p>
+                      </div>
                     </div>
                   ))
                 )}
@@ -121,41 +181,60 @@ const Dompet: React.FC = () => {
             </>
           )}
         </div>
+
+        <IonModal 
+          isOpen={showModal} 
+          onDidDismiss={() => setShowModal(false)}
+          className="dompet-modal"
+        >
+          <div className="modal-content">
+            <h2 className="modal-title">Tambah Dompet Baru</h2>
+            
+            <IonItem className="form-item">
+              <IonInput
+                placeholder="Nama Dompet"
+                value={newDompet.nama}
+                onIonChange={(e) => setNewDompet({ ...newDompet, nama: e.detail.value! })}
+                className="form-input"
+              />
+            </IonItem>
+            
+            <IonItem className="form-item">
+              <IonInput
+                type="number"
+                placeholder="Saldo Awal"
+                value={newDompet.saldo}
+                onIonChange={(e) => setNewDompet({ ...newDompet, saldo: e.detail.value! })}
+                className="form-input"
+              />
+            </IonItem>
+            
+            <div className="modal-actions">
+              <IonButton 
+                expand="block" 
+                className="save-button hover-scale" 
+                onClick={handleTambahDompet}
+              >
+                Simpan Dompet
+              </IonButton>
+              <IonButton 
+                expand="block" 
+                fill="outline" 
+                className="cancel-button hover-scale" 
+                onClick={() => setShowModal(false)}
+              >
+                Batal
+              </IonButton>
+            </div>
+          </div>
+        </IonModal>
       </IonContent>
 
-      {/* Modal Tambah Dompet */}
-      <IonModal isOpen={showModal} onDidDismiss={() => setShowModal(false)}>
-        <div className="modal-content">
-          <h2>Tambah Dompet Baru</h2>
-          <IonItem>
-            <IonInput
-              placeholder="Nama Dompet"
-              value={newDompet.nama}
-              onIonChange={(e) => setNewDompet({ ...newDompet, nama: e.detail.value! })}
-            />
-          </IonItem>
-          <IonItem>
-            <IonInput
-              type="number"
-              placeholder="Saldo Awal"
-              value={newDompet.saldo}
-              onIonChange={(e) => setNewDompet({ ...newDompet, saldo: e.detail.value! })}
-            />
-          </IonItem>
-          <IonButton expand="block" onClick={handleTambahDompet}>
-            Simpan Dompet
-          </IonButton>
-          <IonButton expand="block" color="danger" onClick={() => setShowModal(false)}>
-            Batal
-          </IonButton>
-        </div>
-      </IonModal>
-
       <IonFooter>
-        <IonTabBar>
+        <IonTabBar className="blue-tabbar">
           <IonTabButton tab="home" onClick={() => history.push("/home")}>
             <IonIcon icon={homeOutline} />
-            <IonLabel>Home</IonLabel>
+            <IonLabel>Beranda</IonLabel>
           </IonTabButton>
           <IonTabButton tab="transaksi" onClick={() => history.push("/transaksi")}>
             <IonIcon icon={listOutline} />

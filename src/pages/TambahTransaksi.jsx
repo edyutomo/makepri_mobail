@@ -7,6 +7,7 @@ function TambahTransaksi() {
   const history = useHistory();
   const [kategori, setKategori] = useState([]);
   const [dompet, setDompet] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [form, setForm] = useState({
     tanggal: "",
     kategori: "",
@@ -19,13 +20,21 @@ function TambahTransaksi() {
   const headers = { Authorization: `Bearer ${token}` };
 
   useEffect(() => {
-    axios.get("https://apitugas3.xyz/api/kategori", { headers })
-      .then(res => setKategori(res.data.data))
-      .catch(err => console.error("Gagal ambil kategori:", err));
-
-    axios.get("https://apitugas3.xyz/api/dompet", { headers })
-      .then(res => setDompet(res.data.data))
-      .catch(err => console.error("Gagal ambil dompet:", err));
+    const fetchData = async () => {
+      try {
+        const [kategoriRes, dompetRes] = await Promise.all([
+          axios.get("https://apitugas3.xyz/api/kategori", { headers }),
+          axios.get("https://apitugas3.xyz/api/dompet", { headers })
+        ]);
+        setKategori(kategoriRes.data.data);
+        setDompet(dompetRes.data.data);
+      } catch (err) {
+        console.error("Gagal memuat data:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
   }, []);
 
   const handleChangeForm = (e) => {
@@ -59,96 +68,110 @@ function TambahTransaksi() {
   };
 
   return (
-    <div className="container-transaksi">
-      <div className="card-transaksi">
-        <h2 className="transaksi-title">Tambah Transaksi</h2>
+    <div className="tambah-transaksi-container">
+      <div className="tambah-transaksi-card slide-in">
+        <h2 className="tambah-transaksi-title">Tambah Transaksi Baru</h2>
 
-        <div>
-          <label>Tanggal:</label>
-          <input
-            type="date"
-            name="tanggal"
-            value={form.tanggal}
-            onChange={handleChangeForm}
-            className="input-full"
-          />
-        </div>
+        {isLoading ? (
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>Memuat data...</p>
+          </div>
+        ) : (
+          <>
+            <div className="form-group">
+              <label>Tanggal:</label>
+              <input
+                type="date"
+                name="tanggal"
+                value={form.tanggal}
+                onChange={handleChangeForm}
+                className="form-input"
+              />
+            </div>
 
-        <div>
-          <label>Kategori:</label>
-          <select
-            name="kategori"
-            value={form.kategori}
-            onChange={handleChangeForm}
-            className="input-full"
-          >
-            <option value="">-- Pilih Kategori --</option>
-            {kategori.map((k) => (
-              <option key={k.id} value={k.id}>
-                {k.nama}
-              </option>
-            ))}
-          </select>
+            <div className="form-group">
+              <label>Kategori:</label>
+              <div className="select-with-button">
+                <select
+                  name="kategori"
+                  value={form.kategori}
+                  onChange={handleChangeForm}
+                  className="form-input"
+                >
+                  <option value="">-- Pilih Kategori --</option>
+                  {kategori.map((k) => (
+                    <option key={k.id} value={k.id}>
+                      {k.nama}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  className="edit-button hover-grow"
+                  onClick={() => history.push("/kategori")}
+                >
+                  ✎ Edit
+                </button>
+              </div>
+            </div>
 
-          {/* Tombol Edit Kategori */}
-          <button
-            className="button-edit-kategori"
-            onClick={() => history.push("/kategori")}
-          >
-            ✎ Edit Kategori
-          </button>
-        </div>
+            <div className="form-group">
+              <label>Dompet:</label>
+              <select
+                name="dompet"
+                value={form.dompet}
+                onChange={handleChangeForm}
+                className="form-input"
+              >
+                <option value="">-- Pilih Dompet --</option>
+                {dompet.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.nama}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-        <div>
-          <label>Dompet:</label>
-          <select
-            name="dompet"
-            value={form.dompet}
-            onChange={handleChangeForm}
-            className="input-full"
-          >
-            <option value="">-- Pilih Dompet --</option>
-            {dompet.map((d) => (
-              <option key={d.id} value={d.id}>
-                {d.nama}
-              </option>
-            ))}
-          </select>
-        </div>
+            <div className="form-group">
+              <label>Jumlah (Rp):</label>
+              <input
+                type="number"
+                name="jumlah"
+                value={form.jumlah}
+                onChange={handleChangeForm}
+                className="form-input"
+                placeholder="0"
+              />
+            </div>
 
-        <div>
-          <label>Jumlah:</label>
-          <input
-            type="number"
-            name="jumlah"
-            value={form.jumlah}
-            onChange={handleChangeForm}
-            className="input-full"
-          />
-        </div>
+            <div className="form-group">
+              <label>Keterangan:</label>
+              <input
+                type="text"
+                name="keterangan"
+                value={form.keterangan}
+                onChange={handleChangeForm}
+                className="form-input"
+                placeholder="Opsional"
+              />
+            </div>
 
-        <div>
-          <label>Keterangan:</label>
-          <input
-            type="text"
-            name="keterangan"
-            value={form.keterangan}
-            onChange={handleChangeForm}
-            className="input-full"
-          />
-        </div>
-
-        <div className="button-group">
-          <button className="button-primary" onClick={simpanTransaksi}>
-            Simpan
-          </button>
-          <button
-            className="button-secondary"
-            onClick={() => history.push("/transaksi")}
-          >
-            Batal
-          </button>
-        </div>
+            <div className="button-group">
+              <button 
+                className="primary-button hover-scale"
+                onClick={simpanTransaksi}
+              >
+                Simpan Transaksi
+              </button>
+              <button 
+                className="secondary-button hover-scale"
+                onClick={() => history.push("/transaksi")}
+              >
+                Batalkan
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

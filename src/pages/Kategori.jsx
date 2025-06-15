@@ -1,42 +1,58 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useHistory } from "react-router-dom"; // GANTI useNavigate
-import "../css/kategori.css";
 import {
+  IonPage,
+  IonHeader,
+  IonToolbar,
+  IonContent,
   IonFooter,
   IonTabBar,
   IonTabButton,
   IonIcon,
   IonLabel,
+  IonFab,
+  IonFabButton,
+  useIonRouter,
+  IonTitle,
+  IonButtons,
+  IonButton
 } from "@ionic/react";
-import {
-  homeOutline,
-  listOutline,
-  walletOutline,
-  personOutline,
+import { 
+  homeOutline, 
+  walletOutline, 
+  personOutline, 
+  listOutline, 
+  addOutline,
+  arrowBackOutline,
+  trashOutline,
+  createOutline
 } from "ionicons/icons";
+import axios from "axios";
+import "../css/kategori.css";
+import logo from "../fto/makepri.png";
 
-function Kategori() {
+const Kategori = () => {
   const [kategori, setKategori] = useState([]);
   const [filter, setFilter] = useState(null);
-  const history = useHistory(); // GANTI dari useNavigate
-
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useIonRouter();
   const token = localStorage.getItem("token");
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  };
+  const headers = { Authorization: `Bearer ${token}` };
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = () => {
-    axios
-      .get("https://apitugas3.xyz/api/kategori", { headers })
-      .then((res) => setKategori(res.data.data))
-      .catch((err) => console.error("Gagal ambil kategori:", err));
+    setIsLoading(true);
+    axios.get("https://apitugas3.xyz/api/kategori", { headers })
+      .then((res) => {
+        setKategori(res.data.data);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Gagal ambil kategori:", err);
+        setIsLoading(false);
+      });
   };
 
   const handleDelete = async (id) => {
@@ -44,9 +60,7 @@ function Kategori() {
     if (!confirm) return;
 
     try {
-      await axios.delete(`https://apitugas3.xyz/api/kategori/${id}`, {
-        headers,
-      });
+      await axios.delete(`https://apitugas3.xyz/api/kategori/${id}`, { headers });
       fetchData();
     } catch (err) {
       console.error("Gagal hapus kategori:", err);
@@ -54,116 +68,131 @@ function Kategori() {
     }
   };
 
-  const kategoriFiltered = filter
+  const filteredKategori = filter 
     ? kategori.filter((k) => k.tipe === filter)
     : [];
 
   return (
-    <>
-      <div className="kategori-container">
-        <div className="kategori-header">
-          <h2>Kategori</h2>
-          <button
-            onClick={() => history.push("/tambahkategori")}
-            className="btn tambah-btn"
-          >
-            + Tambah Kategori
-          </button>
-        </div>
+    <IonPage>
+      <IonHeader>
+        <IonToolbar className="blue-toolbar">
+          <IonButtons slot="start">
+            <IonButton onClick={() => router.goBack()}>
+              <IonIcon slot="icon-only" icon={arrowBackOutline} />
+            </IonButton>
+          </IonButtons>
+          <IonTitle>Manajemen Kategori</IonTitle>
+          <IonButtons slot="end">
+            <IonButton onClick={() => router.push("/tambahkategori")}>
+              <IonIcon slot="icon-only" icon={addOutline} />
+            </IonButton>
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
 
-        <div className="kategori-filter">
-          <button onClick={() => setFilter("pemasukan")}>
-            Tampilkan Kategori Pemasukan
-          </button>
-          <button onClick={() => setFilter("pengeluaran")}>
-            Tampilkan Kategori Pengeluaran
-          </button>
-        </div>
+      <IonContent fullscreen className="blue-content">
+        <div className="kategori-container">
+          {/* Filter Kategori */}
+          <div className="filter-buttons">
+            <button 
+              onClick={() => setFilter("pemasukan")}
+              className={`filter-btn ${filter === "pemasukan" ? "active" : ""}`}
+            >
+              Pemasukan
+            </button>
+            <button 
+              onClick={() => setFilter("pengeluaran")}
+              className={`filter-btn ${filter === "pengeluaran" ? "active" : ""}`}
+            >
+              Pengeluaran
+            </button>
+          </div>
 
-        {filter && (
-          <table className="kategori-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nama Kategori</th>
-                <th>Tipe</th>
-                <th>Aksi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {kategoriFiltered.length > 0 ? (
-                kategoriFiltered.map((k) => (
-                  <tr key={k.id}>
-                    <td>{k.id}</td>
-                    <td>{k.nama}</td>
-                    <td>{k.tipe}</td>
-                    <td>
-                      <button
-                        className="btn edit-btn"
-                        onClick={() => history.push(`/editkategori/${k.id}`)}
+          {/* Loading State */}
+          {isLoading && (
+            <div className="loading-state">
+              <div className="spinner"></div>
+              <p>Memuat data kategori...</p>
+            </div>
+          )}
+
+          {/* Empty State */}
+          {!isLoading && !filter && (
+            <div className="empty-state">
+              <div className="empty-icon">
+                <IonIcon icon={listOutline} />
+              </div>
+              <p>Silakan pilih jenis kategori untuk menampilkan data</p>
+            </div>
+          )}
+
+          {/* Kategori List */}
+          {!isLoading && filter && (
+            <div className="kategori-list">
+              {filteredKategori.length > 0 ? (
+                filteredKategori.map((k, index) => (
+                  <div 
+                    key={k.id} 
+                    className="kategori-item slide-up"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className="kategori-info">
+                      <span className="kategori-nama">{k.nama}</span>
+                      <span className={`kategori-tipe ${k.tipe}`}>
+                        {k.tipe}
+                      </span>
+                    </div>
+                    <div className="action-buttons">
+                      <button 
+                        onClick={() => router.push(`/editkategori/${k.id}`)}
+                        className="edit-btn"
                       >
-                        Edit
+                        <IonIcon icon={createOutline} />
                       </button>
-                      <button
-                        className="btn delete-btn"
+                      <button 
                         onClick={() => handleDelete(k.id)}
+                        className="delete-btn"
                       >
-                        Hapus
+                        <IonIcon icon={trashOutline} />
                       </button>
-                    </td>
-                  </tr>
+                    </div>
+                  </div>
                 ))
               ) : (
-                <tr>
-                  <td colSpan={4}>Tidak ada kategori {filter}</td>
-                </tr>
+                <div className="empty-state">
+                  <div className="empty-icon">
+                    <IonIcon icon={listOutline} />
+                  </div>
+                  <p>Tidak ada kategori {filter}</p>
+                </div>
               )}
-            </tbody>
-          </table>
-        )}
-
-        {!filter && (
-          <p>
-            Pilih tombol pemasukan atau pengeluaran untuk menampilkan kategori
-            terkait.
-          </p>
-        )}
-
-        <div className="kembali-container">
-          <button
-            onClick={() => history.push("/transaksi")}
-            className="btn kembali-btn"
-          >
-            ← Kembali
-          </button>
+            </div>
+          )}
         </div>
-      </div>
+      </IonContent>
 
       <IonFooter>
-        <IonTabBar>
-          <IonTabButton tab="home" onClick={() => history.push("/home")}>
+        <IonTabBar className="blue-tabbar">
+          <IonTabButton tab="home" onClick={() => router.push("/home")}>
             <IonIcon icon={homeOutline} />
-            <IonLabel>Home</IonLabel>
+            <IonLabel>Beranda</IonLabel>
           </IonTabButton>
-
-          <IonTabButton tab="transaksi" onClick={() => history.push("/transaksi")}>
+          <IonTabButton tab="transaksi" onClick={() => router.push("/transaksi")}>
             <IonIcon icon={listOutline} />
             <IonLabel>Transaksi</IonLabel>
           </IonTabButton>
-
-          <IonTabButton tab="dompet" onClick={() => history.push("/dompet")}>
+          <IonTabButton tab="dompet" onClick={() => router.push("/dompet")}>
             <IonIcon icon={walletOutline} />
             <IonLabel>Dompet</IonLabel>
           </IonTabButton>
-
-          <IonTabButton tab="profile" onClick={() => history.push("/profile")}>
+          <IonTabButton tab="profile" onClick={() => router.push("/profile")}>
             <IonIcon icon={personOutline} />
             <IonLabel>Profil</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonFooter>
-    </>
+    </IonPage>
   );
-}
+};
 
 export default Kategori;

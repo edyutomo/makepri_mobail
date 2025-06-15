@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import "../css/editprofile.css";
 import axios from "axios";
+import { IonIcon } from "@ionic/react";
+import { cameraOutline, saveOutline, closeOutline } from "ionicons/icons";
 
 interface EditProfileProps {
   user: any;
@@ -100,88 +102,96 @@ const EditProfile: React.FC<EditProfileProps> = ({
   };
 
   return (
-    <div className="edit-profile-box">
-      <h2>Edit Profile</h2>
+    <div className="edit-profile-container fade-in">
+      <div className="edit-profile-card slide-up">
+        <h2 className="edit-profile-title">Edit Profil</h2>
 
-      {/* Foto Profil + Ganti */}
-      <img
-        src={previewUrl || "/default-profile.png"}
-        alt="Foto Profil"
-        className="profile-img"
-        onClick={handleImageClick}
-        style={{ cursor: "pointer" }}
-        title="Klik untuk ganti foto profil"
-      />
-      <input
-        type="file"
-        ref={fileInputRef}
-        style={{ display: "none" }}
-        accept="image/*"
-        capture="user" // kamera depan, atau gunakan "environment" untuk belakang
-        onChange={handleFileChange}
-      />
-      {selectedFile && (
-        <small style={{ display: "block", marginBottom: "10px" }}>
-          Foto dipilih: {selectedFile.name}
-        </small>
-      )}
-
-      {/* Tombol ambil dari kamera/galeri */}
-      <div style={{ marginTop: "10px", display: "flex", justifyContent: "center" }}>
-        <button
-          type="button"
-          onClick={handleImageClick}
-          style={{
-            padding: "6px 12px",
-            backgroundColor: "#007bff",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Ambil dari Kamera / Galeri
-        </button>
-      </div>
-
-      {/* Form */}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={username}
-          placeholder="Username"
-          onChange={(e) => setUsername(e.target.value)}
-          disabled={loading}
-        />
-        <input
-          type="password"
-          placeholder="Password Lama"
-          value={oldPassword}
-          onChange={(e) => setOldPassword(e.target.value)}
-          disabled={loading}
-        />
-        <input
-          type="password"
-          placeholder="Password Baru"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          disabled={loading}
-        />
-
-        <div className="edit-buttons">
-          <button
-            type="button"
-            className="btn-cancel"
-            onClick={onCancel}
-            disabled={loading}
+        {/* Foto Profil */}
+        <div className="profile-image-container">
+          <img
+            src={previewUrl || "/default-profile.png"}
+            alt="Foto Profil"
+            className="profile-image hover-grow"
+            onClick={handleImageClick}
+          />
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="file-input"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+          {selectedFile && (
+            <p className="file-selected">File dipilih: {selectedFile.name}</p>
+          )}
+          <button 
+            type="button" 
+            className="change-photo-btn hover-scale"
+            onClick={handleImageClick}
           >
-            Batal
-          </button>
-          <button type="submit" className="btn-save" disabled={loading}>
-            {loading ? "Menyimpan..." : "Konfirmasi"}
+            <IonIcon icon={cameraOutline} className="btn-icon" />
+            Ganti Foto
           </button>
         </div>
-      </form>
+
+        {/* Form Edit */}
+        <form onSubmit={handleSubmit} className="edit-profile-form">
+          <div className="form-group">
+            <label>Nama Pengguna</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="form-input"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Password Lama</label>
+            <input
+              type="password"
+              placeholder="Kosongkan jika tidak ingin mengubah"
+              value={oldPassword}
+              onChange={(e) => setOldPassword(e.target.value)}
+              className="form-input"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Password Baru</label>
+            <input
+              type="password"
+              placeholder="Minimal 6 karakter"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              className="form-input"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-actions">
+            <button
+              type="button"
+              className="cancel-btn hover-scale"
+              onClick={onCancel}
+              disabled={loading}
+            >
+              <IonIcon icon={closeOutline} className="btn-icon" />
+              Batal
+            </button>
+            <button 
+              type="submit" 
+              className="save-btn hover-scale"
+              disabled={loading}
+            >
+              <IonIcon icon={saveOutline} className="btn-icon" />
+              {loading ? "Menyimpan..." : "Simpan Perubahan"}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

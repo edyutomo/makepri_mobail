@@ -20,6 +20,10 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isFocused, setIsFocused] = useState({
+    email: false,
+    password: false
+  });
   const history = useHistory();
 
   const handleLogin = async () => {
@@ -38,9 +42,7 @@ const Login: React.FC = () => {
       console.log('Login response:', response.data);
 
       if (response.data.status && response.data.token) {
-        // Simpan token dalam localStorage, sesuai yang dibutuhkan oleh Dompet.tsx
         localStorage.setItem('token', response.data.token);
-
         alert('Login berhasil!');
         history.push('/home');
       } else {
@@ -60,32 +62,49 @@ const Login: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
-          <IonTitle>Login</IonTitle>
+        <IonToolbar className="header-toolbar">
+          <IonTitle className="header-title">Login</IonTitle>
         </IonToolbar>
       </IonHeader>
 
       <IonContent fullscreen className="login-container">
         <div className="form-wrapper">
-          <h2 className="login-title">Masuk</h2>
+          <div className="logo-container">
+            <div className="logo-circle">
+              <svg viewBox="0 0 24 24" className="logo-icon">
+                <path fill="currentColor" d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z" />
+              </svg>
+            </div>
+          </div>
+          
+          <h2 className="login-title">Selamat Datang di Makepri</h2>
+          <p className="login-subtitle">Kelola Keuanganmu Menjadi Lebih Mudah</p>
 
-          <p className="input-label">Email:</p>
-          <IonItem className="input-container">
+          <IonItem 
+            className={`input-container ${isFocused.email ? 'focused' : ''}`}
+            lines="none"
+          >
             <IonInput
               type="email"
               value={email}
               onIonChange={(e) => setEmail(e.detail.value ?? '')}
-              placeholder="Masukkan Email"
+              placeholder="Alamat Email"
+              onIonFocus={() => setIsFocused({...isFocused, email: true})}
+              onIonBlur={() => setIsFocused({...isFocused, email: false})}
             />
           </IonItem>
 
-          <p className="input-label">Password:</p>
-          <IonItem className="input-container password-input">
+          <IonItem 
+            className={`input-container ${isFocused.password ? 'focused' : ''}`}
+            lines="none"
+          >
             <IonInput
               type={showPassword ? 'text' : 'password'}
               value={password}
               onIonChange={(e) => setPassword(e.detail.value ?? '')}
-              placeholder="Masukkan Password"
+              placeholder="Kata Sandi"
+              onIonFocus={() => setIsFocused({...isFocused, password: true})}
+              onIonBlur={() => setIsFocused({...isFocused, password: false})}
             />
             <IonIcon
               slot="end"
@@ -95,17 +114,31 @@ const Login: React.FC = () => {
             />
           </IonItem>
 
-          <IonButton expand="block" className="login-button" onClick={handleLogin} disabled={loading}>
-            {loading ? 'Loading...' : 'Login'}
+          <div className="forgot-password">
+            <span onClick={() => history.push('/forgot-password')}>Lupa Kata Sandi?</span>
+          </div>
+
+          <IonButton 
+            expand="block" 
+            className="login-button" 
+            onClick={handleLogin} 
+            disabled={loading}
+          >
+            {loading ? (
+              <div className="spinner"></div>
+            ) : (
+              'Masuk'
+            )}
           </IonButton>
 
           <p className="register-link">
             Belum punya akun?{' '}
-            <span onClick={() => history.push('/register')} className="register-action">
-              Daftar sekarang
+            <span 
+              onClick={() => history.push('/register')} 
+              className="register-action"
+            >
+              Daftar Sekarang
             </span>
-            <br />
-            <a href="/" className="back-to-home-link">Kembali ke tampilan menu awal</a>
           </p>
         </div>
       </IonContent>
