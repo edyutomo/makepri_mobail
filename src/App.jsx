@@ -15,13 +15,8 @@ import TambahTransaksi from './pages/TambahTransaksi';
 import TrsPengeluaran from './pages/trspengeluaran';
 import DompetTambah from './pages/DompetTambah';
 import Kategori from './pages/Kategori';
-//import EditKategori from "./pages/EditKategori";
 
-
-//import Kategori from "./pages/Kategori";
-// import TambahKategori from "./pages/TambahKategori";
-//import Editkategori from './pages/EditKategori';
-
+import './theme/variables.css';
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
@@ -34,11 +29,8 @@ import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.system.css';
 
-
-import './theme/variables.css';
-
-import { App as CapacitorApp } from '@capacitor/app'; // untuk exitApp
-
+import { App as CapacitorApp } from '@capacitor/app';
+import RefresherWrapper from './components/RefresherWrapper'; // ← pastikan path-nya sesuai
 
 setupIonicReact();
 
@@ -53,33 +45,53 @@ const App = () => {
     };
 
     document.addEventListener('ionBackButton', handler);
-
-    return () => {
-      document.removeEventListener('ionBackButton', handler);
-    };
+    return () => document.removeEventListener('ionBackButton', handler);
   }, []);
 
   return (
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/" component={Welcome} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/home" component={Home} />
-          <Route exact path="/dompet" component={Dompet} />
-          <Route exact path="/transaksi" component={Transaksi} />
-          <Route exact path="/tambahtransaksi" component={TambahTransaksi} />
-           <Route path="/kategori" exact component={Kategori} />
-          {/*<Route path="/tambahkategori" component={TambahKategori} />*/}
-          {/* <Route path="/kategori/edit/:id" element={<EditKategori />} /> 
-          <Route exact path="/editkategori" component={EditKategori} />*/}
-          <Route exact path="/pengeluaran" component={TrsPengeluaran} />
-          <Route exact path="/profile" component={Profile} />
-          <Route exact path="/Editprofile" component={Editprofile} />
-          <Route path="/dompet-tambah" component={DompetTambah} exact />
+
+          <Route exact path="/" render={() => (
+            <RefresherWrapper><Welcome /></RefresherWrapper>
+          )} />
+          <Route exact path="/login" render={() => (
+            <RefresherWrapper><Login /></RefresherWrapper>
+          )} />
+          <Route exact path="/register" render={() => (
+            <RefresherWrapper><Register /></RefresherWrapper>
+          )} />
+          <Route exact path="/home" render={() => (
+            <RefresherWrapper><Home /></RefresherWrapper>
+          )} />
+          <Route exact path="/dompet" render={() => (
+            <RefresherWrapper><Dompet /></RefresherWrapper>
+          )} />
+          <Route exact path="/transaksi" render={() => (
+            <RefresherWrapper><Transaksi /></RefresherWrapper>
+          )} />
+          <Route exact path="/tambahtransaksi" render={() => (
+            <RefresherWrapper><TambahTransaksi /></RefresherWrapper>
+          )} />
+          <Route exact path="/kategori" render={() => (
+            <RefresherWrapper><Kategori /></RefresherWrapper>
+          )} />
+          <Route exact path="/pengeluaran" render={() => (
+            <RefresherWrapper><TrsPengeluaran /></RefresherWrapper>
+          )} />
+          <Route exact path="/profile" render={() => (
+            <RefresherWrapper><Profile /></RefresherWrapper>
+          )} />
+          <Route exact path="/editprofile" render={() => (
+            <RefresherWrapper><Editprofile /></RefresherWrapper>
+          )} />
+          <Route exact path="/dompet-tambah" render={() => (
+            <RefresherWrapper><DompetTambah /></RefresherWrapper>
+          )} />
 
           <Redirect to="/home" />
+
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
