@@ -1,28 +1,16 @@
 .login-container {
-  --background: transparent;
+  --background: #ffffff; /* ✅ Fix untuk layar gelap */
+  background: linear-gradient(135deg, #0081d1 0%, #182848 100%);
+  background-size: 400% 400%;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* Menggunakan min-height bukan height */
+  min-height: 100vh;
   padding: 20px;
-  background: linear-gradient(135deg, #0081d1 0%, #182848 100%);
-  animation: gradientBG 15s ease infinite;
-  background-size: 400% 400%;
   box-sizing: border-box;
-  position: relative; /* tambahkan ini */
+  position: relative;
   z-index: 0;
-}
-
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  animation: none; /* ❌ Disable animasi berat */
 }
 
 .header-toolbar {
@@ -45,13 +33,13 @@
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 350px;
-  margin: auto; /* Pusatkan horizontal */
+  margin: auto;
   position: relative;
+  margin-top: 100px;
   transform: translateY(0);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 120px; /* Atur sesuai selera */
 }
-/* Tambahkan ini untuk memastikan konten tidak terpotong di layar kecil */
+
 @media (max-height: 600px) {
   .login-container {
     align-items: flex-start;
@@ -63,25 +51,6 @@
 .form-wrapper:hover {
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-}
-
-.form-wrapper::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  animation: borderGrow 0.5s ease-out forwards;
-}
-
-@keyframes borderGrow {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
 }
 
 .logo-container {
@@ -183,22 +152,6 @@
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-}
-
-.login-button::after {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -60%;
-  width: 200%;
-  height: 200%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: rotate(30deg);
-  transition: all 0.3s ease;
-}
-
-.login-button:hover::after {
-  left: 100%;
 }
 
 .login-button:active {
