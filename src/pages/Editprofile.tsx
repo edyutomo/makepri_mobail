@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "../css/editprofile.css";
 import axios from "axios";
 import { IonIcon } from "@ionic/react";
-import { cameraOutline, saveOutline, closeOutline, imagesOutline } from "ionicons/icons";
-import { Camera, CameraResultType, CameraSource } from "@capacitor/camera";
+import { cameraOutline, saveOutline, closeOutline } from "ionicons/icons";
 
 interface EditProfileProps {
   user: any;
@@ -23,6 +22,8 @@ const EditProfile: React.FC<EditProfileProps> = ({
   const [previewUrl, setPreviewUrl] = useState<string>(user?.foto ?? "");
   const [loading, setLoading] = useState(false);
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   useEffect(() => {
     if (selectedFile) {
       const objectUrl = URL.createObjectURL(selectedFile);
@@ -31,43 +32,13 @@ const EditProfile: React.FC<EditProfileProps> = ({
     }
   }, [selectedFile]);
 
-  const pickImageFromCamera = async () => {
-    try {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.Uri,
-        source: CameraSource.Camera,
-      });
-
-      if (image.webPath) {
-        setPreviewUrl(image.webPath);
-        const blob = await fetch(image.webPath).then((res) => res.blob());
-        const file = new File([blob], "camera-photo.jpg", { type: blob.type });
-        setSelectedFile(file);
-      }
-    } catch (error) {
-      console.error("Gagal mengambil gambar dari kamera:", error);
-    }
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
   };
 
-  const pickImageFromGallery = async () => {
-    try {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.Uri,
-        source: CameraSource.Photos,
-      });
-
-      if (image.webPath) {
-        setPreviewUrl(image.webPath);
-        const blob = await fetch(image.webPath).then((res) => res.blob());
-        const file = new File([blob], "gallery-photo.jpg", { type: blob.type });
-        setSelectedFile(file);
-      }
-    } catch (error) {
-      console.error("Gagal memilih gambar dari galeri:", error);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
     }
   };
 
@@ -141,17 +112,26 @@ const EditProfile: React.FC<EditProfileProps> = ({
             src={previewUrl || "/default-profile.png"}
             alt="Foto Profil"
             className="profile-image hover-grow"
+            onClick={handleImageClick}
           />
-          <div className="change-photo-buttons">
-            <button type="button" onClick={pickImageFromCamera} className="change-photo-btn hover-scale">
-              <IonIcon icon={cameraOutline} className="btn-icon" />
-              Kamera
-            </button>
-            <button type="button" onClick={pickImageFromGallery} className="change-photo-btn hover-scale">
-              <IonIcon icon={imagesOutline} className="btn-icon" />
-              Galeri
-            </button>
-          </div>
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="file-input"
+            accept="image/*"
+            onChange={handleFileChange}
+          />
+          {selectedFile && (
+            <p className="file-selected">File dipilih: {selectedFile.name}</p>
+          )}
+          <button 
+            type="button" 
+            className="change-photo-btn hover-scale"
+            onClick={handleImageClick}
+          >
+            <IonIcon icon={cameraOutline} className="btn-icon" />
+            Ganti Foto
+          </button>
         </div>
 
         {/* Form Edit */}
