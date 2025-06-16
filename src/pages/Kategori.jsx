@@ -14,17 +14,17 @@ import {
   useIonRouter,
   IonTitle,
   IonButtons,
-  IonButton
+  IonButton,
 } from "@ionic/react";
-import { 
-  homeOutline, 
-  walletOutline, 
-  personOutline, 
-  listOutline, 
+import {
+  homeOutline,
+  walletOutline,
+  personOutline,
+  listOutline,
   addOutline,
   arrowBackOutline,
   trashOutline,
-  createOutline
+  createOutline,
 } from "ionicons/icons";
 import axios from "axios";
 import "../css/kategori.css";
@@ -44,7 +44,8 @@ const Kategori = () => {
 
   const fetchData = () => {
     setIsLoading(true);
-    axios.get("https://apitugas3.xyz/api/kategori", { headers })
+    axios
+      .get("https://apitugas3.xyz/api/kategori", { headers })
       .then((res) => {
         setKategori(res.data.data);
         setIsLoading(false);
@@ -60,7 +61,9 @@ const Kategori = () => {
     if (!confirm) return;
 
     try {
-      await axios.delete(`https://apitugas3.xyz/api/kategori/${id}`, { headers });
+      await axios.delete(`https://apitugas3.xyz/api/kategori/${id}`, {
+        headers,
+      });
       fetchData();
     } catch (err) {
       console.error("Gagal hapus kategori:", err);
@@ -68,7 +71,7 @@ const Kategori = () => {
     }
   };
 
-  const filteredKategori = filter 
+  const filteredKategori = filter
     ? kategori.filter((k) => k.tipe === filter)
     : [];
 
@@ -81,11 +84,13 @@ const Kategori = () => {
               <IonIcon slot="icon-only" icon={arrowBackOutline} />
             </IonButton>
           </IonButtons>
-          <IonTitle>Manajemen Kategori</IonTitle>
+          <div className="toolbar-content">
+            <img src={logo} alt="Logo" className="toolbar-logo pulse" />
+          </div>
           <IonButtons slot="end">
-            <IonButton onClick={() => router.push("/tambahkategori")}>
+            {/* <IonButton onClick={() => router.push("/tambahkategori")}>
               <IonIcon slot="icon-only" icon={addOutline} />
-            </IonButton>
+            </IonButton> */}
           </IonButtons>
         </IonToolbar>
       </IonHeader>
@@ -94,15 +99,17 @@ const Kategori = () => {
         <div className="kategori-container">
           {/* Filter Kategori */}
           <div className="filter-buttons">
-            <button 
+            <button
               onClick={() => setFilter("pemasukan")}
               className={`filter-btn ${filter === "pemasukan" ? "active" : ""}`}
             >
               Pemasukan
             </button>
-            <button 
+            <button
               onClick={() => setFilter("pengeluaran")}
-              className={`filter-btn ${filter === "pengeluaran" ? "active" : ""}`}
+              className={`filter-btn ${
+                filter === "pengeluaran" ? "active" : ""
+              }`}
             >
               Pengeluaran
             </button>
@@ -131,8 +138,8 @@ const Kategori = () => {
             <div className="kategori-list">
               {filteredKategori.length > 0 ? (
                 filteredKategori.map((k, index) => (
-                  <div 
-                    key={k.id} 
+                  <div
+                    key={k.id}
                     className="kategori-item slide-up"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
@@ -143,13 +150,13 @@ const Kategori = () => {
                       </span>
                     </div>
                     <div className="action-buttons">
-                      <button 
+                      <button
                         onClick={() => router.push(`/editkategori/${k.id}`)}
                         className="edit-btn"
                       >
                         <IonIcon icon={createOutline} />
                       </button>
-                      <button 
+                      <button
                         onClick={() => handleDelete(k.id)}
                         className="delete-btn"
                       >
@@ -177,7 +184,10 @@ const Kategori = () => {
             <IonIcon icon={homeOutline} />
             <IonLabel>Beranda</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="transaksi" onClick={() => router.push("/transaksi")}>
+          <IonTabButton
+            tab="transaksi"
+            onClick={() => router.push("/transaksi")}
+          >
             <IonIcon icon={listOutline} />
             <IonLabel>Transaksi</IonLabel>
           </IonTabButton>
